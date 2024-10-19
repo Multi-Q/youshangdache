@@ -2,7 +2,7 @@ package com.qrh.youshangdache.security.service;
 
 import com.qrh.youshangdache.model.entity.system.SysUser;
 import com.qrh.youshangdache.security.custom.CustomUser;
-import com.atguigu.daijia.system.client.SecurityLoginFeignClient;
+import com.qrh.youshangdache.system.client.SecurityLoginFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -8,7 +8,7 @@ import com.atguigu.daijia.common.util.ResponseUtil;
 import com.qrh.youshangdache.model.entity.system.SysLoginLog;
 import com.qrh.youshangdache.model.vo.system.LoginVo;
 import com.qrh.youshangdache.security.custom.CustomUser;
-import com.atguigu.daijia.system.client.SysLoginLogFeignClient;
+import com.qrh.youshangdache.system.client.SysLoginLogFeignClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
