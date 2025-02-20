@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-
+/**
+ * 请求工具类
+ */
 public class RequestUtils {
 
     /**

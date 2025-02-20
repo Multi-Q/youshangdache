@@ -2,9 +2,9 @@ package com.qrh.youshangdache.common.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.qrh.youshangdache.common.annotation.Log;
-import com.atguigu.daijia.common.util.IpUtil;
+import com.qrh.youshangdache.common.util.IpUtil;
 import com.qrh.youshangdache.model.entity.system.SysOperLog;
-import com.atguigu.daijia.system.client.SysOperLogFeignClient;
+import com.qrh.youshangdache.system.client.SysOperLogFeignClient;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,14 +27,13 @@ import java.util.Map;
 
 
 /**
- * 操作日志记录处理
+ * 操作日志记录处理切面
  */
 @Aspect
 @Component
 public class LogAspect {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
 
-    //微服务切换为feign调用接口
     @Resource
     private SysOperLogFeignClient sysOperLogFeignClient;
 
@@ -67,14 +66,14 @@ public class LogAspect {
 
             // *========数据库日志=========*//
             SysOperLog operLog = new SysOperLog();
-            operLog.setStatus(1);
+            operLog.setStatus(1); //1 异常
             // 请求的地址
             String ip = IpUtil.getIpAddress(request);//IpUtil.getIpAddr(ServletUtils.getRequest());
             operLog.setOperIp(ip);
             operLog.setOperUrl(request.getRequestURI());
 
             if (e != null) {
-                operLog.setStatus(0);
+                operLog.setStatus(0); //0 正常
                 operLog.setErrorMsg(e.getMessage());
             }
             // 设置方法名称
@@ -87,7 +86,7 @@ public class LogAspect {
             getControllerMethodDescription(joinPoint, controllerLog, operLog, jsonResult);
             // 保存数据库
             sysOperLogFeignClient.saveSysLog(operLog);
-            log.info("操作日志："+JSON.toJSONString(operLog));
+            log.info("操作日志：{}", JSON.toJSONString(operLog));
         } catch (Exception exp) {
             // 记录本地异常日志
             log.error("==前置通知异常==");

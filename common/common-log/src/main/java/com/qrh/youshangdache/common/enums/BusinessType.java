@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.common.enums;
 
 /**
- * 业务操作类型
+ * 业务操作类型枚举类
  */
 public enum BusinessType {
     /**

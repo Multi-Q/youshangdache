@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.common.enums;
 
 /**
- * 操作人类别
+ * 操作人类别枚举类
  */
 public enum OperatorType {
     /**

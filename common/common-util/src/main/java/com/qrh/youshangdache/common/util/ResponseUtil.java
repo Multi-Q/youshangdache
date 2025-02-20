@@ -8,6 +8,9 @@ import org.springframework.http.MediaType;
 
 import java.io.IOException;
 
+/**
+ * 相应工具类
+ */
 public class ResponseUtil {
 
     public static void out(HttpServletResponse response, Result r) {

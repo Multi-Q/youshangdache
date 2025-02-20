@@ -46,11 +46,12 @@ public enum ResultCodeEnum {
     COUPON_LESS(231, "优惠券库存不足"),
     COUPON_USER_LIMIT(232, "超出领取数量"),
     WX_CREATE_ERROR(233,"微信创建失败"),
-    XXL_JOB_ERROR(233,"任务调度失败");
+    XXL_JOB_ERROR(234,"任务调度失败"),
+    LOGIN_MOBILE_ERROR(235,"手机号登陆失败" );
 
-    private Integer code;
+    private final Integer code;
 
-    private String message;
+    private final String message;
 
     private ResultCodeEnum(Integer code, String message) {
         this.code = code;

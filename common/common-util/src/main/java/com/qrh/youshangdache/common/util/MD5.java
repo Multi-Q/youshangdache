@@ -3,12 +3,19 @@ package com.qrh.youshangdache.common.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
+/**
+ * MD5加密工具类
+ */
 public final class MD5 {
 
+    /**
+     * 加密
+     * @param strSrc 需要加密的字符串
+     * @return 加密后的字符串
+     */
     public static String encrypt(String strSrc) {
         try {
-            char hexChars[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
+            char[] hexChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
                     '9', 'a', 'b', 'c', 'd', 'e', 'f' };
             byte[] bytes = strSrc.getBytes();
             MessageDigest md = MessageDigest.getInstance("MD5");
