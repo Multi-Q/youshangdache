@@ -1,16 +1,16 @@
 package com.qrh.youshangdache.rules.service.impl;
 
-import com.atguigu.daijia.model.form.payment.ProfitsharingForm;
-import com.atguigu.daijia.model.form.rules.ProfitsharingRuleRequest;
-import com.atguigu.daijia.model.form.rules.ProfitsharingRuleRequestForm;
-import com.atguigu.daijia.model.form.rules.RewardRuleRequest;
-import com.atguigu.daijia.model.vo.rules.ProfitsharingRuleResponse;
-import com.atguigu.daijia.model.vo.rules.ProfitsharingRuleResponseVo;
-import com.atguigu.daijia.model.vo.rules.RewardRuleResponse;
-import com.atguigu.daijia.model.vo.rules.RewardRuleResponseVo;
+import com.qrh.youshangdache.model.form.payment.ProfitsharingForm;
+import com.qrh.youshangdache.model.form.rules.ProfitsharingRuleRequest;
+import com.qrh.youshangdache.model.form.rules.ProfitsharingRuleRequestForm;
+import com.qrh.youshangdache.model.form.rules.RewardRuleRequest;
+import com.qrh.youshangdache.model.vo.rules.ProfitsharingRuleResponse;
+import com.qrh.youshangdache.model.vo.rules.ProfitsharingRuleResponseVo;
+import com.qrh.youshangdache.model.vo.rules.RewardRuleResponse;
+import com.qrh.youshangdache.model.vo.rules.RewardRuleResponseVo;
 import com.qrh.youshangdache.rules.mapper.ProfitsharingRuleMapper;
 import com.qrh.youshangdache.rules.service.ProfitsharingRuleService;
-import com.qrh.youshangdache.rules.utils.DroolsHelper;
+import com.qrh.youshangdache.rules.utils.DroolsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +31,7 @@ public class ProfitsharingRuleServiceImpl implements ProfitsharingRuleService {
         profitsharingRuleRequest.setOrderNum(profitsharingRuleRequestForm.getOrderNum());
         profitsharingRuleRequest.setOrderAmount(profitsharingRuleRequestForm.getOrderAmount());
         //创建规则引擎对象
-        KieSession kieSession = DroolsHelper.loadForRule(RULES_CUSTOMER_RULES_DRL);
+        KieSession kieSession = DroolsUtils.loadForRule(RULES_CUSTOMER_RULES_DRL);
         ProfitsharingRuleResponse profitsharingRuleResponse = new ProfitsharingRuleResponse();
         kieSession.setGlobal("profitsharingRuleResponse", profitsharingRuleResponse);
         //触发规则

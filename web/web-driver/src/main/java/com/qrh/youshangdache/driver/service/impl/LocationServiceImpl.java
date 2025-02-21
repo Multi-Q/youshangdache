@@ -1,16 +1,16 @@
 package com.qrh.youshangdache.driver.service.impl;
 
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.driver.client.DriverInfoFeignClient;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.driver.client.DriverInfoFeignClient;
 import com.qrh.youshangdache.driver.service.LocationService;
-import com.atguigu.daijia.map.client.LocationFeignClient;
-import com.atguigu.daijia.map.client.MapFeignClient;
-import com.atguigu.daijia.model.entity.driver.DriverSet;
-import com.atguigu.daijia.model.form.map.OrderServiceLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateDriverLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateOrderLocationForm;
+import com.qrh.youshangdache.map.client.LocationFeignClient;
+import com.qrh.youshangdache.map.client.MapFeignClient;
+import com.qrh.youshangdache.model.entity.driver.DriverSet;
+import com.qrh.youshangdache.model.form.map.OrderServiceLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateDriverLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateOrderLocationForm;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

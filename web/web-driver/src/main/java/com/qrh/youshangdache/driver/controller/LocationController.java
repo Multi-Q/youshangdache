@@ -1,12 +1,12 @@
 package com.qrh.youshangdache.driver.controller;
 
-import com.atguigu.daijia.common.login.Login;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.util.AuthContextHolder;
+import com.qrh.youshangdache.common.login.Login;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.util.AuthContextHolder;
 import com.qrh.youshangdache.driver.service.LocationService;
-import com.atguigu.daijia.model.form.map.OrderServiceLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateDriverLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateOrderLocationForm;
+import com.qrh.youshangdache.model.form.map.OrderServiceLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateDriverLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateOrderLocationForm;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

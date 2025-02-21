@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.rules.service;
 
-import com.atguigu.daijia.model.form.payment.ProfitsharingForm;
-import com.atguigu.daijia.model.form.rules.ProfitsharingRuleRequestForm;
-import com.atguigu.daijia.model.vo.rules.ProfitsharingRuleResponseVo;
+import com.qrh.youshangdache.model.form.payment.ProfitsharingForm;
+import com.qrh.youshangdache.model.form.rules.ProfitsharingRuleRequestForm;
+import com.qrh.youshangdache.model.vo.rules.ProfitsharingRuleResponseVo;
 
 public interface ProfitsharingRuleService {
 

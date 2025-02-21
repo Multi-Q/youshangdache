@@ -1,18 +1,18 @@
 package com.qrh.youshangdache.order.controller;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.order.OrderInfo;
-import com.atguigu.daijia.model.form.order.OrderInfoForm;
-import com.atguigu.daijia.model.form.order.StartDriveForm;
-import com.atguigu.daijia.model.form.order.UpdateOrderBillForm;
-import com.atguigu.daijia.model.form.order.UpdateOrderCartForm;
-import com.atguigu.daijia.model.vo.base.PageVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.order.OrderInfo;
+import com.qrh.youshangdache.model.form.order.OrderInfoForm;
+import com.qrh.youshangdache.model.form.order.StartDriveForm;
+import com.qrh.youshangdache.model.form.order.UpdateOrderBillForm;
+import com.qrh.youshangdache.model.form.order.UpdateOrderCartForm;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.order.*;
 import com.qrh.youshangdache.order.service.OrderInfoService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 @Tag(name = "订单API接口管理")
 @RestController
 @RequestMapping(value = "/order/info")
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class OrderInfoController {
     @Resource
     private OrderInfoService orderInfoService;

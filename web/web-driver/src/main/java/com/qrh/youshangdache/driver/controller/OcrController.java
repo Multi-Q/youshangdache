@@ -1,10 +1,10 @@
 package com.qrh.youshangdache.driver.controller;
 
-import com.atguigu.daijia.common.login.Login;
-import com.atguigu.daijia.common.result.Result;
+import com.qrh.youshangdache.common.login.Login;
+import com.qrh.youshangdache.common.result.Result;
 import com.qrh.youshangdache.driver.service.OcrService;
-import com.atguigu.daijia.model.vo.driver.DriverLicenseOcrVo;
-import com.atguigu.daijia.model.vo.driver.IdCardOcrVo;
+import com.qrh.youshangdache.model.vo.driver.DriverLicenseOcrVo;
+import com.qrh.youshangdache.model.vo.driver.IdCardOcrVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "腾讯云识别接口管理")
 @RestController
 @RequestMapping(value = "/ocr")
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class OcrController {
     @Resource
     private OcrService ocrService;

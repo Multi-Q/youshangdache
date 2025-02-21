@@ -1,15 +1,15 @@
 package com.qrh.youshangdache.map.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import com.qrh.youshangdache.map.service.MapService;
-import com.atguigu.daijia.model.form.map.CalculateDrivingLineForm;
-import com.atguigu.daijia.model.vo.map.DrivingLineVo;
+import com.qrh.youshangdache.model.form.map.CalculateDrivingLineForm;
+import com.qrh.youshangdache.model.vo.map.DrivingLineVo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,13 +20,19 @@ import java.util.Map;
 
 @Slf4j
 @Service
-@SuppressWarnings({"unchecked", "rawtypes"})
+@RefreshScope
 public class MapServiceImpl implements MapService {
     @Resource
     private RestTemplate restTemplate;
+
     @Value("tencent.cloud.map")
     private String key;
 
+    /**
+     * 计算驾驶路线
+     * @param calculateDrivingLineForm
+     * @return
+     */
     @Override
     public DrivingLineVo calculateDrivingLine(CalculateDrivingLineForm calculateDrivingLineForm) {
         //请求腾讯提供的接口，最返回需要的结果

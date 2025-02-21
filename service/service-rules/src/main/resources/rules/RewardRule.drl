@@ -1,11 +1,11 @@
 //package对应的不一定是真正的目录，可以任意写com.abc，同一个包下的drl文件可以相互访问
 package  com.atguigu.daijia
 
-import RewardRuleRequest;
+import com.qrh.youshangdache.model.form.rules.RewardRuleRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-global RewardRuleResponse rewardRuleResponse;
+global com.qrh.youshangdache.model.vo.rules.RewardRuleResponse rewardRuleResponse;
 
 /**
 系统奖励

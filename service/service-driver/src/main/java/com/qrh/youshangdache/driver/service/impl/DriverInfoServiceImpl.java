@@ -198,6 +198,11 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         return true;
     }
 
+    /**
+     * 更新司机认证信息
+     * @param updateDriverAuthInfoForm
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean updateDriverAuthInfo(UpdateDriverAuthInfoForm updateDriverAuthInfoForm) {
@@ -207,9 +212,15 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         return this.updateById(driverInfo);
     }
 
+    /**
+     * 获取司机认证信息
+     * @param driverId 司机id
+     * @return
+     */
     @Override
     public DriverAuthInfoVo getDriverAuthInfo(Long driverId) {
         DriverInfo driverInfo = driverInfoMapper.selectById(driverId);
+        if (driverInfo == null) throw new GuiguException(ResultCodeEnum.ACCOUNT_NOT_EXIST);
         DriverAuthInfoVo driverAuthInfoVo = new DriverAuthInfoVo();
         BeanUtils.copyProperties(driverInfo, driverAuthInfoVo);
 

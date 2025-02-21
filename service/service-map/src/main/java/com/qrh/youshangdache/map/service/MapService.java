@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.map.service;
 
-import com.atguigu.daijia.model.form.map.CalculateDrivingLineForm;
-import com.atguigu.daijia.model.vo.map.DrivingLineVo;
+import com.qrh.youshangdache.model.form.map.CalculateDrivingLineForm;
+import com.qrh.youshangdache.model.vo.map.DrivingLineVo;
 
 public interface MapService {
 

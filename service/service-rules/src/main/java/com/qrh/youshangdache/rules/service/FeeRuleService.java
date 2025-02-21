@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.rules.service;
 
-import com.atguigu.daijia.model.form.rules.FeeRuleRequestForm;
-import com.atguigu.daijia.model.vo.rules.FeeRuleResponseVo;
+import com.qrh.youshangdache.model.form.rules.FeeRuleRequestForm;
+import com.qrh.youshangdache.model.vo.rules.FeeRuleResponseVo;
 
 public interface FeeRuleService {
 

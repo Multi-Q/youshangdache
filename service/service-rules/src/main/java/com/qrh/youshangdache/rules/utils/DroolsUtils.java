@@ -8,22 +8,30 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
 
+import java.util.HashMap;
+
 /**
  * @author QRH
  * @date 2024/8/22 17:06
  * @description TODO
  */
-public class DroolsHelper {
-    private static final String RULES_CUSTOMER_RULES_DRL = "rules/FeeRule.drl";
+public class DroolsUtils {
 
-    public static KieSession loadForRule(String drlStr) {
+    /**
+     * 加载规则文件
+     *
+     * @return KieContainer
+     */
+    public static KieSession loadForRule(String ruleFilePath) {
         KieServices kieServices = KieServices.Factory.get();
-        KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        kieFileSystem.write(ResourceFactory.newClassPathResource(drlStr));
-        KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
-        kb.buildAll();
-        KieModule kieModule = kb.getKieModule();
+        KieFileSystem kieFileSystem = kieServices.newKieFileSystem()
+                .write(ResourceFactory.newClassPathResource(ruleFilePath));
+        KieModule kieModule = kieServices.newKieBuilder(kieFileSystem)
+                .buildAll()
+                .getKieModule();
         KieContainer kieContainer = kieServices.newKieContainer(kieModule.getReleaseId());
         return kieContainer.newKieSession();
     }
+
+
 }

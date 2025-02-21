@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.order.client;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.order.OrderMonitor;
-import com.atguigu.daijia.model.entity.order.OrderMonitorRecord;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.order.OrderMonitor;
+import com.qrh.youshangdache.model.entity.order.OrderMonitorRecord;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

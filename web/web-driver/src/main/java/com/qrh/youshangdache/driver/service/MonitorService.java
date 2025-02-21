@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.driver.service;
 
-import com.atguigu.daijia.model.entity.order.OrderMonitor;
-import com.atguigu.daijia.model.form.order.OrderMonitorForm;
+import com.qrh.youshangdache.model.entity.order.OrderMonitor;
+import com.qrh.youshangdache.model.form.order.OrderMonitorForm;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MonitorService {

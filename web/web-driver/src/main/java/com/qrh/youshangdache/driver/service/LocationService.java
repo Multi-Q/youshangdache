@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.driver.service;
 
-import com.atguigu.daijia.model.form.map.OrderServiceLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateDriverLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateOrderLocationForm;
+import com.qrh.youshangdache.model.form.map.OrderServiceLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateDriverLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateOrderLocationForm;
 
 import java.util.List;
 

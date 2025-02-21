@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.order.mapper;
 
-import com.atguigu.daijia.model.entity.order.OrderInfo;
-import com.atguigu.daijia.model.vo.order.OrderListVo;
-import com.atguigu.daijia.model.vo.order.OrderPayVo;
+import com.qrh.youshangdache.model.entity.order.OrderInfo;
+import com.qrh.youshangdache.model.vo.order.OrderListVo;
+import com.qrh.youshangdache.model.vo.order.OrderPayVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

@@ -1,15 +1,19 @@
 package com.qrh.youshangdache.order.service.impl;
 
-import com.atguigu.daijia.common.constant.RedisConstant;
-import com.atguigu.daijia.common.constant.SystemConstant;
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.model.enums.OrderStatus;
-import com.atguigu.daijia.model.form.order.OrderInfoForm;
-import com.atguigu.daijia.model.form.order.StartDriveForm;
-import com.atguigu.daijia.model.form.order.UpdateOrderBillForm;
-import com.atguigu.daijia.model.form.order.UpdateOrderCartForm;
-import com.atguigu.daijia.model.vo.base.PageVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qrh.youshangdache.common.constant.RedisConstant;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.model.entity.order.*;
+import com.qrh.youshangdache.model.enums.OrderStatus;
+import com.qrh.youshangdache.model.form.order.OrderInfoForm;
+import com.qrh.youshangdache.model.form.order.StartDriveForm;
+import com.qrh.youshangdache.model.form.order.UpdateOrderBillForm;
+import com.qrh.youshangdache.model.form.order.UpdateOrderCartForm;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.order.*;
 import com.qrh.youshangdache.order.mapper.OrderBillMapper;
 import com.qrh.youshangdache.order.mapper.OrderInfoMapper;
 import com.qrh.youshangdache.order.mapper.OrderProfitsharingMapper;
@@ -17,19 +21,12 @@ import com.qrh.youshangdache.order.mapper.OrderStatusLogMapper;
 import com.qrh.youshangdache.order.service.OrderInfoService;
 import com.qrh.youshangdache.order.service.OrderMonitorService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import jakarta.annotation.Resource;
-import org.redisson.Redisson;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -294,6 +291,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return currentOrderInfoVo;
     }
 
+    /**
+     * 查询该乘客是否有已经进行或未支付的订单信息，
+     * 订单信息的状态为：已接单、司机已到达、更新代驾车辆信息、开始服务、结束服务、待付款都视为订单未完成，该乘客不能再叫车
+     * @param customerId 乘客id
+     * @return 当前订单信息
+     */
     @Override
     public CurrentOrderInfoVo searchCustomerCurrentOrder(Long customerId) {
         Integer[] statusArray = {
@@ -306,7 +309,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         };
         LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<OrderInfo>()
                 .eq(OrderInfo::getCustomerId, customerId)
-                .in(OrderInfo::getStatus, statusArray)
+                .in(OrderInfo::getStatus,  statusArray)
                 .orderByDesc(OrderInfo::getId)
                 .last(" limit 1");
         OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
