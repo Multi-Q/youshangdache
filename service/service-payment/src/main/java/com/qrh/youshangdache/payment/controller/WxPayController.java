@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.payment.controller;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.form.payment.PaymentInfoForm;
-import com.atguigu.daijia.model.vo.payment.WxPrepayVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.form.payment.PaymentInfoForm;
+import com.qrh.youshangdache.model.vo.payment.WxPrepayVo;
 import com.qrh.youshangdache.payment.service.WxPayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

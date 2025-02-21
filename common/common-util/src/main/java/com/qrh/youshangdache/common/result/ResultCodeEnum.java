@@ -47,7 +47,9 @@ public enum ResultCodeEnum {
     COUPON_USER_LIMIT(232, "超出领取数量"),
     WX_CREATE_ERROR(233,"微信创建失败"),
     XXL_JOB_ERROR(234,"任务调度失败"),
-    LOGIN_MOBILE_ERROR(235,"手机号登陆失败" );
+    LOGIN_MOBILE_ERROR(235,"手机号登陆失败" ),
+    ACCOUNT_NOT_EXIST(236, "账号不存在"),
+    UNCORRECTED_PHONE_NUMBER(237, "手机号不正确"),;
 
     private final Integer code;
 

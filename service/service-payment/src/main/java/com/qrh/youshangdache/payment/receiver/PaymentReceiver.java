@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.payment.receiver;
 
-import com.atguigu.daijia.common.constant.MqConst;
+import com.qrh.youshangdache.common.constant.MqConst;
 import com.qrh.youshangdache.payment.service.WxPayService;
 import com.rabbitmq.client.Channel;
 import jakarta.annotation.Resource;

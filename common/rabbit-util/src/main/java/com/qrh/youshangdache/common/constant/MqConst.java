@@ -1,5 +1,8 @@
 package com.qrh.youshangdache.common.constant;
 
+/**
+ * rabbitmq相关的常量
+ */
 public class MqConst {
 
 

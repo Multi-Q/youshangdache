@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.security.custom;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.common.util.ResponseUtil;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;

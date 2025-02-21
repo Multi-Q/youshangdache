@@ -1,10 +1,10 @@
 package com.qrh.youshangdache.security.fillter;
 
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.common.util.IpUtil;
-import com.atguigu.daijia.common.util.ResponseUtil;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.util.IpUtil;
+import com.qrh.youshangdache.common.util.ResponseUtil;
 import com.qrh.youshangdache.model.entity.system.SysLoginLog;
 import com.qrh.youshangdache.model.vo.system.LoginVo;
 import com.qrh.youshangdache.security.custom.CustomUser;

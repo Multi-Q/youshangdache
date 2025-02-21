@@ -1,12 +1,14 @@
 package com.qrh.youshangdache.order.client;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.order.OrderInfo;
-import com.atguigu.daijia.model.form.order.OrderInfoForm;
-import com.atguigu.daijia.model.form.order.StartDriveForm;
-import com.atguigu.daijia.model.form.order.UpdateOrderBillForm;
-import com.atguigu.daijia.model.form.order.UpdateOrderCartForm;
-import com.atguigu.daijia.model.vo.base.PageVo;
+
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.order.OrderInfo;
+import com.qrh.youshangdache.model.form.order.OrderInfoForm;
+import com.qrh.youshangdache.model.form.order.StartDriveForm;
+import com.qrh.youshangdache.model.form.order.UpdateOrderBillForm;
+import com.qrh.youshangdache.model.form.order.UpdateOrderCartForm;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.order.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

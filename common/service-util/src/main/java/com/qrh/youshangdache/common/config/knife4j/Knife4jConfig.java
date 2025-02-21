@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Knife4jConfig {
 
+    /**
+     * 用户端api
+     */
     @Bean
     public GroupedOpenApi webCustomerApi() {
         return GroupedOpenApi.builder()
@@ -18,6 +21,9 @@ public class Knife4jConfig {
                 .build();
     }
 
+    /**
+     * 司机端api
+     */
     @Bean
     public GroupedOpenApi webDriverApi() {
         return GroupedOpenApi.builder()
@@ -33,10 +39,6 @@ public class Knife4jConfig {
     }
 
 
-
-
-
-
     /***
      * @description 自定义接口信息
      */
@@ -45,9 +47,9 @@ public class Knife4jConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("代驾API接口文档")
+                        .title("优尚打车API接口文档")
                         .version("1.0")
-                        .description("代驾API接口文档")
+                        .description("优尚打车API接口文档")
                         .contact(new Contact().name("QRH")));
     }
 

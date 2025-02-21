@@ -2,10 +2,10 @@ package com.qrh.youshangdache.security.fillter;
 
 
 import com.alibaba.fastjson.JSON;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.common.util.AuthContextHolder;
-import com.atguigu.daijia.common.util.ResponseUtil;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.util.AuthContextHolder;
+import com.qrh.youshangdache.common.util.ResponseUtil;
 import com.qrh.youshangdache.model.entity.system.SysUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

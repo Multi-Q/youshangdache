@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.payment.service;
 
-import com.atguigu.daijia.model.form.payment.PaymentInfoForm;
-import com.atguigu.daijia.model.vo.payment.WxPrepayVo;
+import com.qrh.youshangdache.model.form.payment.PaymentInfoForm;
+import com.qrh.youshangdache.model.vo.payment.WxPrepayVo;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface WxPayService {

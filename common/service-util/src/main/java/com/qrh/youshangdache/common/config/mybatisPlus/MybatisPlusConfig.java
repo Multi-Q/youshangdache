@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @EnableTransactionManagement
 @Configuration
-@MapperScan("com.atguigu.daijia.*.mapper")
+@MapperScan("com.qrh.youshangdache.*.mapper")
 public class MybatisPlusConfig {
 
     /**
-     *
+     * 分页插件
      * @return
      */
     @Bean

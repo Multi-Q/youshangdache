@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.payment.mapper;
 
-import com.atguigu.daijia.model.entity.payment.PaymentInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qrh.youshangdache.model.entity.payment.PaymentInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

@@ -2,8 +2,8 @@ package com.qrh.youshangdache.common.login;
 
 import com.qrh.youshangdache.common.constant.RedisConstant;
 import com.qrh.youshangdache.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.common.util.AuthContextHolder;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.util.AuthContextHolder;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,8 +27,8 @@ public class LoginAspect {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    @Around(value="execution(* com.atguigu.daijia.*.controller.*.*(..)) && @annotation(guiguLogin)")
-    public Object login(ProceedingJoinPoint proceedingJoinPoint,GuiguLogin guiguLogin) throws Throwable{
+    @Around(value="execution(* com.qrh.youshangdache.*.controller.*.*(..)) && @annotation(login)")
+    public Object login(ProceedingJoinPoint proceedingJoinPoint,Login login) throws Throwable{
         //1 获取request对象
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes sra = (ServletRequestAttributes) attributes;

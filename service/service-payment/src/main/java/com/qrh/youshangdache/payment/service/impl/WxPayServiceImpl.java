@@ -1,19 +1,20 @@
 package com.qrh.youshangdache.payment.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.atguigu.daijia.common.constant.MqConst;
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.common.service.RabbitService;
-import com.atguigu.daijia.common.util.RequestUtils;
-import com.atguigu.daijia.driver.client.DriverAccountFeignClient;
-import com.atguigu.daijia.model.entity.payment.PaymentInfo;
-import com.atguigu.daijia.model.enums.TradeType;
-import com.atguigu.daijia.model.form.driver.TransferForm;
-import com.atguigu.daijia.model.form.payment.PaymentInfoForm;
-import com.atguigu.daijia.model.vo.order.OrderRewardVo;
-import com.atguigu.daijia.model.vo.payment.WxPrepayVo;
-import com.atguigu.daijia.order.client.OrderInfoFeignClient;
+
+import com.qrh.youshangdache.common.constant.MqConst;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.service.RabbitService;
+import com.qrh.youshangdache.common.util.RequestUtils;
+import com.qrh.youshangdache.driver.client.DriverAccountFeignClient;
+import com.qrh.youshangdache.model.entity.payment.PaymentInfo;
+import com.qrh.youshangdache.model.enums.TradeType;
+import com.qrh.youshangdache.model.form.driver.TransferForm;
+import com.qrh.youshangdache.model.form.payment.PaymentInfoForm;
+import com.qrh.youshangdache.model.vo.order.OrderRewardVo;
+import com.qrh.youshangdache.model.vo.payment.WxPrepayVo;
+import com.qrh.youshangdache.order.client.OrderInfoFeignClient;
 import com.qrh.youshangdache.payment.config.WxPayV3Properties;
 import com.qrh.youshangdache.payment.mapper.PaymentInfoMapper;
 import com.qrh.youshangdache.payment.service.WxPayService;

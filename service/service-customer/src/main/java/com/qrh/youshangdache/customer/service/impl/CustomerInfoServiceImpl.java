@@ -3,15 +3,16 @@ package com.qrh.youshangdache.customer.service.impl;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.util.PhoneNumberUtils;
 import com.qrh.youshangdache.customer.mapper.CustomerInfoMapper;
 import com.qrh.youshangdache.customer.mapper.CustomerLoginLogMapper;
 import com.qrh.youshangdache.customer.service.CustomerInfoService;
-import com.atguigu.daijia.model.entity.customer.CustomerInfo;
-import com.atguigu.daijia.model.entity.customer.CustomerLoginLog;
-import com.atguigu.daijia.model.form.customer.UpdateWxPhoneForm;
-import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
+import com.qrh.youshangdache.model.entity.customer.CustomerInfo;
+import com.qrh.youshangdache.model.entity.customer.CustomerLoginLog;
+import com.qrh.youshangdache.model.form.customer.UpdateWxPhoneForm;
+import com.qrh.youshangdache.model.vo.customer.CustomerLoginVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -42,14 +44,27 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         return customerInfo.getWxOpenId();
     }
 
+    /**
+     * 更新用户手机号
+     *
+     * @param updateWxPhoneForm 更新用户手机号表单
+     * @return 是否更新成功
+     */
     @Override
     public Boolean updateWxPhoneNumber(UpdateWxPhoneForm updateWxPhoneForm) {
         //根据code获取微信绑定的手机号
         try {
             WxMaPhoneNumberInfo phoneNoInfo = wxMaService.getUserService().getPhoneNoInfo(updateWxPhoneForm.getCode());
+            if (phoneNoInfo == null ||
+                    (StringUtils.isNotBlank(phoneNoInfo.getPhoneNumber()) &&
+                            PhoneNumberUtils.isValidPhoneNumber(phoneNoInfo.getPhoneNumber()))) {
+                throw new GuiguException(ResultCodeEnum.UNCORRECTED_PHONE_NUMBER);
+            }
             String phoneNumber = phoneNoInfo.getPhoneNumber();
             //更新用户信息
             CustomerInfo customerInfo = customerInfoMapper.selectById(updateWxPhoneForm.getCustomerId());
+            if (customerInfo == null)
+                throw new GuiguException(ResultCodeEnum.ACCOUNT_NOT_EXIST);
             customerInfo.setPhone(phoneNumber);
             customerInfoMapper.updateById(customerInfo);
             return true;
@@ -58,11 +73,17 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         }
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param customerId 用户id
+     * @return 用户的登录信息
+     */
     @Override
     public CustomerLoginVo getCustomerInfo(Long customerId) {
         //1根据用户id查询用户信息
         CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
-        if (Optional.ofNullable(customerInfo).isEmpty()) {
+        if (customerInfo == null) {
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
         //2封装到CustomerInfoVO
@@ -70,13 +91,20 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         BeanUtils.copyProperties(customerInfo, customerLoginVo);
 
         String phone = customerInfo.getPhone();
-        boolean hasText = org.springframework.util.StringUtils.hasText(phone);
+        boolean hasText = StringUtils.isNotBlank(phone);
         customerLoginVo.setIsBindPhone(hasText);
         //3返回CustomerInfoVO
         return customerLoginVo;
     }
 
+    /**
+     * 登录
+     *
+     * @param code
+     * @return 用户id
+     */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Long login(String code) {
         //1获取code值，使用微信工具包对象获取微信唯一标识openid
         String openid = null;
@@ -94,7 +122,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         //3第一次登录，添加到数据库
         if (customerInfo == null) {
             customerInfo = new CustomerInfo();
-            customerInfo.setNickname(String.valueOf(System.currentTimeMillis()));
+            customerInfo.setNickname("用户" + System.currentTimeMillis());
             customerInfo.setAvatarUrl("https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg");
             customerInfo.setWxOpenId(openid);
             customerInfoMapper.insert(customerInfo);

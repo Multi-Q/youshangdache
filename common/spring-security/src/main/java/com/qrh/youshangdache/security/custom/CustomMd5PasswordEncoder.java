@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.security.custom;
 
-import com.atguigu.daijia.common.util.MD5;
+import com.qrh.youshangdache.common.util.MD5;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.common.execption;
 
-import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import lombok.Data;
 
 /**
@@ -37,7 +37,7 @@ public class GuiguException extends RuntimeException {
 
     @Override
     public String toString() {
-        return "GuliException{" +
+        return "GuiguException{" +
                 "code=" + code +
                 ", message=" + this.getMessage() +
                 '}';

@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.common.handler;
 
 import com.qrh.youshangdache.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import feign.codec.DecodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
