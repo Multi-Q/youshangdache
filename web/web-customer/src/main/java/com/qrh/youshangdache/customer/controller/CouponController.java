@@ -1,14 +1,14 @@
 package com.qrh.youshangdache.customer.controller;
 
-import com.atguigu.daijia.common.login.Login;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.util.AuthContextHolder;
+import com.qrh.youshangdache.common.login.Login;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.util.AuthContextHolder;
 import com.qrh.youshangdache.customer.service.CouponService;
-import com.atguigu.daijia.model.vo.base.PageVo;
-import com.atguigu.daijia.model.vo.coupon.AvailableCouponVo;
-import com.atguigu.daijia.model.vo.coupon.NoReceiveCouponVo;
-import com.atguigu.daijia.model.vo.coupon.NoUseCouponVo;
-import com.atguigu.daijia.model.vo.coupon.UsedCouponVo;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.coupon.AvailableCouponVo;
+import com.qrh.youshangdache.model.vo.coupon.NoReceiveCouponVo;
+import com.qrh.youshangdache.model.vo.coupon.NoUseCouponVo;
+import com.qrh.youshangdache.model.vo.coupon.UsedCouponVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

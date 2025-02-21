@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.customer.service;
 
-import com.atguigu.daijia.model.form.customer.UpdateWxPhoneForm;
-import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
-import com.atguigu.daijia.model.vo.order.CurrentOrderInfoVo;
+import com.qrh.youshangdache.model.form.customer.UpdateWxPhoneForm;
+import com.qrh.youshangdache.model.vo.customer.CustomerLoginVo;
+import com.qrh.youshangdache.model.vo.order.CurrentOrderInfoVo;
 
 public interface CustomerService {
 

@@ -1,9 +1,9 @@
 package com.qrh.youshangdache.customer.client;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.customer.CustomerInfo;
-import com.atguigu.daijia.model.form.customer.UpdateWxPhoneForm;
-import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.customer.CustomerInfo;
+import com.qrh.youshangdache.model.form.customer.UpdateWxPhoneForm;
+import com.qrh.youshangdache.model.vo.customer.CustomerLoginVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

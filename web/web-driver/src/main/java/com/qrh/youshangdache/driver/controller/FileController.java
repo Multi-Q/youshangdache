@@ -1,14 +1,12 @@
 package com.qrh.youshangdache.driver.controller;
 
-import com.atguigu.daijia.common.login.Login;
-import com.atguigu.daijia.common.result.Result;
+import com.qrh.youshangdache.common.login.Login;
+import com.qrh.youshangdache.common.result.Result;
 import com.qrh.youshangdache.driver.service.CosService;
 import com.qrh.youshangdache.driver.service.FileService;
-import com.atguigu.daijia.model.vo.driver.CosUploadVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

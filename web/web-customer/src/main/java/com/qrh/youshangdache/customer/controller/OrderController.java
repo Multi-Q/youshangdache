@@ -1,36 +1,34 @@
 package com.qrh.youshangdache.customer.controller;
 
-import com.atguigu.daijia.common.login.Login;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.util.AuthContextHolder;
+import com.qrh.youshangdache.common.login.Login;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.util.AuthContextHolder;
 import com.qrh.youshangdache.customer.service.OrderService;
-import com.atguigu.daijia.model.entity.order.OrderInfo;
-import com.atguigu.daijia.model.form.customer.ExpectOrderForm;
-import com.atguigu.daijia.model.form.customer.SubmitOrderForm;
-import com.atguigu.daijia.model.form.map.CalculateDrivingLineForm;
-import com.atguigu.daijia.model.form.payment.CreateWxPaymentForm;
-import com.atguigu.daijia.model.vo.base.PageVo;
-import com.atguigu.daijia.model.vo.customer.ExpectOrderVo;
-import com.atguigu.daijia.model.vo.driver.DriverInfoVo;
-import com.atguigu.daijia.model.vo.map.DrivingLineVo;
-import com.atguigu.daijia.model.vo.map.OrderLocationVo;
-import com.atguigu.daijia.model.vo.map.OrderServiceLastLocationVo;
-import com.atguigu.daijia.model.vo.order.CurrentOrderInfoVo;
-import com.atguigu.daijia.model.vo.order.OrderInfoVo;
-import com.atguigu.daijia.model.vo.payment.WxPrepayVo;
+import com.qrh.youshangdache.model.entity.order.OrderInfo;
+import com.qrh.youshangdache.model.form.customer.ExpectOrderForm;
+import com.qrh.youshangdache.model.form.customer.SubmitOrderForm;
+import com.qrh.youshangdache.model.form.map.CalculateDrivingLineForm;
+import com.qrh.youshangdache.model.form.payment.CreateWxPaymentForm;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.customer.ExpectOrderVo;
+import com.qrh.youshangdache.model.vo.driver.DriverInfoVo;
+import com.qrh.youshangdache.model.vo.map.DrivingLineVo;
+import com.qrh.youshangdache.model.vo.map.OrderLocationVo;
+import com.qrh.youshangdache.model.vo.map.OrderServiceLastLocationVo;
+import com.qrh.youshangdache.model.vo.order.CurrentOrderInfoVo;
+import com.qrh.youshangdache.model.vo.order.OrderInfoVo;
+import com.qrh.youshangdache.model.vo.payment.WxPrepayVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Tag(name = "订单API接口管理")
 @RestController
 @RequestMapping("/order")
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class OrderController {
     @Resource
     private OrderService orderService;

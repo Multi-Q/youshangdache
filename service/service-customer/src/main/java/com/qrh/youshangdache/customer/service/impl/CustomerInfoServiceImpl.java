@@ -20,15 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Slf4j
 @Service
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, CustomerInfo> implements CustomerInfoService {
     @Resource
     private WxMaService wxMaService;
@@ -37,6 +34,11 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
     @Resource
     private CustomerLoginLogMapper customerLoginLogMapper;
 
+    /**
+     * 获取用户的openId
+     * @param customerId 用户id
+     * @return 用户的openId
+     */
     @Override
     public String getCustomerOpenId(Long customerId) {
         LambdaQueryWrapper<CustomerInfo> wrapper = new LambdaQueryWrapper<CustomerInfo>().eq(CustomerInfo::getId, customerId);
@@ -51,6 +53,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
      * @return 是否更新成功
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Boolean updateWxPhoneNumber(UpdateWxPhoneForm updateWxPhoneForm) {
         //根据code获取微信绑定的手机号
         try {
@@ -69,7 +72,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
             customerInfoMapper.updateById(customerInfo);
             return true;
         } catch (WxErrorException e) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
         }
     }
 

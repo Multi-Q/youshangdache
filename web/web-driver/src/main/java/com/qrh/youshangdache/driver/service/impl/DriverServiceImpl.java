@@ -1,20 +1,19 @@
 package com.qrh.youshangdache.driver.service.impl;
 
-import com.atguigu.daijia.common.constant.RedisConstant;
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
-import com.atguigu.daijia.dispatch.client.NewOrderFeignClient;
-import com.atguigu.daijia.driver.client.DriverInfoFeignClient;
+import com.qrh.youshangdache.common.constant.RedisConstant;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.dispatch.client.NewOrderFeignClient;
+import com.qrh.youshangdache.driver.client.DriverInfoFeignClient;
 import com.qrh.youshangdache.driver.service.DriverService;
-import com.atguigu.daijia.map.client.LocationFeignClient;
-import com.atguigu.daijia.model.form.driver.DriverFaceModelForm;
-import com.atguigu.daijia.model.form.driver.UpdateDriverAuthInfoForm;
-import com.atguigu.daijia.model.vo.driver.DriverAuthInfoVo;
-import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
+import com.qrh.youshangdache.map.client.LocationFeignClient;
+import com.qrh.youshangdache.model.form.driver.DriverFaceModelForm;
+import com.qrh.youshangdache.model.form.driver.UpdateDriverAuthInfoForm;
+import com.qrh.youshangdache.model.vo.driver.DriverAuthInfoVo;
+import com.qrh.youshangdache.model.vo.driver.DriverLoginVo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class DriverServiceImpl implements DriverService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -37,7 +35,7 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Boolean stopService(Long driverId) {
         //更新司机的接单状态
-        driverInfoFeignClient.updateServiceStatus(driverId,0);
+        driverInfoFeignClient.updateServiceStatus(driverId, 0);
         //删除司机的位置信息
         locationFeignClient.removeDriverLocation(driverId);
         //清空司机临时队列数据
@@ -92,27 +90,30 @@ public class DriverServiceImpl implements DriverService {
         return driverInfoFeignClient.getDriverAuthInfo(driverId).getData();
     }
 
+    /**
+     * 登录后的司机信息
+     * @param driverId 司机id
+     * @return 司机信息
+     */
     @Override
     public DriverLoginVo getDriverLoginInfo(Long driverId) {
-        Result<DriverLoginVo> driverLoginInfoResult = driverInfoFeignClient.getDriverLoginInfo(driverId);
-        DriverLoginVo driverLoginVo = driverLoginInfoResult.getData();
-        return driverLoginVo;
+        return driverInfoFeignClient.getDriverLoginInfo(driverId).getData();
     }
 
+    /**
+     * 登录
+     *
+     * @param code 微信临时票据
+     * @return
+     */
     @Override
     public String login(String code) {
-        //远程调用，获取司机id
-        Result<Long> longResult = driverInfoFeignClient.login(code);
-        if (longResult.getCode() != 200) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
-        }
-        Long driverId = longResult.getData();
         //token字符串
         String token = UUID.randomUUID().toString().replace("-", "");
         //放到redis，设置过期时间
         stringRedisTemplate.opsForValue()
                 .set(RedisConstant.USER_LOGIN_KEY_PREFIX + token,
-                        driverId.toString(),
+                        driverInfoFeignClient.login(code).getData().toString(),
                         RedisConstant.USER_LOGIN_KEY_TIMEOUT,
                         TimeUnit.SECONDS);
         return token;

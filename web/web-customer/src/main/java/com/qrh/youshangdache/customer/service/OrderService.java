@@ -1,18 +1,18 @@
 package com.qrh.youshangdache.customer.service;
 
-import com.atguigu.daijia.model.entity.order.OrderInfo;
-import com.atguigu.daijia.model.form.customer.ExpectOrderForm;
-import com.atguigu.daijia.model.form.customer.SubmitOrderForm;
-import com.atguigu.daijia.model.form.map.CalculateDrivingLineForm;
-import com.atguigu.daijia.model.form.payment.CreateWxPaymentForm;
-import com.atguigu.daijia.model.vo.base.PageVo;
-import com.atguigu.daijia.model.vo.customer.ExpectOrderVo;
-import com.atguigu.daijia.model.vo.driver.DriverInfoVo;
-import com.atguigu.daijia.model.vo.map.DrivingLineVo;
-import com.atguigu.daijia.model.vo.map.OrderLocationVo;
-import com.atguigu.daijia.model.vo.map.OrderServiceLastLocationVo;
-import com.atguigu.daijia.model.vo.order.OrderInfoVo;
-import com.atguigu.daijia.model.vo.payment.WxPrepayVo;
+import com.qrh.youshangdache.model.entity.order.OrderInfo;
+import com.qrh.youshangdache.model.form.customer.ExpectOrderForm;
+import com.qrh.youshangdache.model.form.customer.SubmitOrderForm;
+import com.qrh.youshangdache.model.form.map.CalculateDrivingLineForm;
+import com.qrh.youshangdache.model.form.payment.CreateWxPaymentForm;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.customer.ExpectOrderVo;
+import com.qrh.youshangdache.model.vo.driver.DriverInfoVo;
+import com.qrh.youshangdache.model.vo.map.DrivingLineVo;
+import com.qrh.youshangdache.model.vo.map.OrderLocationVo;
+import com.qrh.youshangdache.model.vo.map.OrderServiceLastLocationVo;
+import com.qrh.youshangdache.model.vo.order.OrderInfoVo;
+import com.qrh.youshangdache.model.vo.payment.WxPrepayVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 public interface OrderService {

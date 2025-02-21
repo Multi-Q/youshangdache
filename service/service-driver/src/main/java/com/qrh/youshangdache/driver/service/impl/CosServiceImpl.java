@@ -27,13 +27,18 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class CosServiceImpl implements CosService {
     @Resource
     private TencentCloudProperties tencentCloudProperties;
-@Resource
-private CiService ciService;
+    @Resource
+    private CiService ciService;
 
+    /**
+     * 将身份证图片等文件上传至腾讯云
+     * @param file 上传的文件
+     * @param path 文件存储路劲
+     * @return
+     */
     @Override
     public CosUploadVo upload(MultipartFile file, String path) {
         //1 初始化用户身份信息
@@ -57,11 +62,11 @@ private CiService ciService;
         putObjectRequest.setStorageClass(StorageClass.Standard);
         PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest); //上传文件
         cosClient.shutdown();
-            //图片审核
+        //图片审核
         Boolean imageAuditing = ciService.imageAuditing(uploadPath);
-        if (!imageAuditing){
+        if (!imageAuditing) {
             //审核失败,删除违规图片
-            cosClient.deleteObject(tencentCloudProperties.getBucketPrivate(),uploadPath);
+            cosClient.deleteObject(tencentCloudProperties.getBucketPrivate(), uploadPath);
             throw new GuiguException(ResultCodeEnum.IMAGE_AUDITION_FAIL);
 
         }

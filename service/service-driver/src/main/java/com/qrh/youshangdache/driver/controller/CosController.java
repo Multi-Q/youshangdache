@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "腾讯云cos上传接口管理")
 @RestController
 @RequestMapping(value="/cos")
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class CosController {
     @Resource
     private CosService cosService;

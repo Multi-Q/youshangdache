@@ -1,25 +1,23 @@
 package com.qrh.youshangdache.driver.controller;
 
-import com.atguigu.daijia.common.login.Login;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.util.AuthContextHolder;
+import com.qrh.youshangdache.common.login.Login;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.util.AuthContextHolder;
 import com.qrh.youshangdache.driver.service.DriverService;
-import com.atguigu.daijia.model.form.driver.DriverFaceModelForm;
-import com.atguigu.daijia.model.form.driver.UpdateDriverAuthInfoForm;
-import com.atguigu.daijia.model.vo.driver.DriverAuthInfoVo;
-import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
+import com.qrh.youshangdache.model.form.driver.DriverFaceModelForm;
+import com.qrh.youshangdache.model.form.driver.UpdateDriverAuthInfoForm;
+import com.qrh.youshangdache.model.vo.driver.DriverAuthInfoVo;
+import com.qrh.youshangdache.model.vo.driver.DriverLoginVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Tag(name = "司机API接口管理")
 @RestController
 @RequestMapping(value = "/driver")
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class DriverController {
     @Resource
     private DriverService driverService;
@@ -32,6 +30,7 @@ public class DriverController {
 
     @Operation(summary = "司机端-获取登录后的司机信息")
     @GetMapping(value = "/getDriverLoginInfo")
+    @Login
     public Result<DriverLoginVo> getDriverLoginInfo() {
         Long driverId = AuthContextHolder.getUserId();
         return Result.ok(driverService.getDriverLoginInfo(driverId));

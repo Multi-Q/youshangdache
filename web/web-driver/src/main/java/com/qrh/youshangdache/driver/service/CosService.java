@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.driver.service;
 
-import com.atguigu.daijia.model.vo.driver.CosUploadVo;
+import com.qrh.youshangdache.model.vo.driver.CosUploadVo;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CosService {

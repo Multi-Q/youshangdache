@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.dispatch.client;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.vo.dispatch.NewOrderTaskVo;
-import com.atguigu.daijia.model.vo.order.NewOrderDataVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.vo.dispatch.NewOrderTaskVo;
+import com.qrh.youshangdache.model.vo.order.NewOrderDataVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

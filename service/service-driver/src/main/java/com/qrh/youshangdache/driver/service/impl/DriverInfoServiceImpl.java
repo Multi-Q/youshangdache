@@ -6,7 +6,7 @@ import com.qrh.youshangdache.common.constant.SystemConstant;
 import com.qrh.youshangdache.common.execption.GuiguException;
 import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import com.qrh.youshangdache.driver.config.TencentCloudProperties;
-import com.atguigu.daijia.driver.mapper.*;
+import com.qrh.youshangdache.driver.mapper.*;
 import com.qrh.youshangdache.driver.mapper.*;
 import com.qrh.youshangdache.driver.service.CosService;
 import com.qrh.youshangdache.driver.service.DriverInfoService;
@@ -41,7 +41,6 @@ import java.util.Date;
 
 @Slf4j
 @Service
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverInfo> implements DriverInfoService {
 
     @Resource
@@ -61,17 +60,31 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     @Resource
     private DriverFaceRecognitionMapper driverFaceRecognitionMapper;
 
+    /**
+     * 获取司机openId
+     *
+     * @param driverId 司机id
+     * @return openId
+     */
     @Override
     public String getDriverOpenId(Long driverId) {
         LambdaQueryWrapper<DriverInfo> wrapper = new LambdaQueryWrapper<DriverInfo>().eq(DriverInfo::getId, driverId);
         DriverInfo driverInfo = driverInfoMapper.selectOne(wrapper);
+        if (driverInfo == null) throw new GuiguException(ResultCodeEnum.ACCOUNT_NOT_EXIST);
         return driverInfo.getWxOpenId();
     }
 
+    /**
+     * 获取司机的信息
+     *
+     * @param driverId 司机id
+     * @return DriverInfoVo
+     */
     @Override
     public DriverInfoVo getDriverInfoOrder(Long driverId) {
         //司机基本信息
         DriverInfo driverInfo = driverInfoMapper.selectById(driverId);
+        if (driverInfo == null) throw new GuiguException(ResultCodeEnum.ACCOUNT_NOT_EXIST);
 
         DriverInfoVo driverInfoVo = new DriverInfoVo();
         BeanUtils.copyProperties(driverInfo, driverInfoVo);
@@ -81,10 +94,10 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         LocalDate now = LocalDate.now();
         int year = Math.abs(
                 Period.between(
-                        licenseIssueDate.toInstant()
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate(),
-                        now)
+                                licenseIssueDate.toInstant()
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate(),
+                                now)
                         .getYears());
         driverInfoVo.setDriverLicenseAge(year);
         return driverInfoVo;
@@ -210,11 +223,18 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         return driverAuthInfoVo;
     }
 
+    /**
+     * 获取登录后的司机信息
+     *
+     * @param driverId 司机id
+     * @return 登录后的司机信息
+     */
     @Override
     public DriverLoginVo getDriverLoginInfo(Long driverId) {
         //根据司机id获取司机信息
         DriverInfo driverInfo = driverInfoMapper.selectById(driverId);
         //driverInfo->DriverLoginVo
+        if (driverInfo == null) throw new GuiguException(ResultCodeEnum.ACCOUNT_NOT_EXIST);
         DriverLoginVo driverLoginVo = new DriverLoginVo();
         BeanUtils.copyProperties(driverInfo, driverLoginVo);
         //是否建立人脸识别
@@ -224,7 +244,14 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         return driverLoginVo;
     }
 
+    /**
+     * 登录
+     *
+     * @param code 微信发过来的临时票据
+     * @return 司机id
+     */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Long login(String code) {
         try {
             //根据code+小程序id+秘钥请求微信接口，返回openid
@@ -238,7 +265,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
             if (driverInfo == null) {
                 //添加司机基本信息
                 driverInfo = new DriverInfo();
-                driverInfo.setNickname(String.valueOf(System.currentTimeMillis()));
+                driverInfo.setNickname("用户" + System.currentTimeMillis());
                 driverInfo.setAvatarUrl("https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg");
                 driverInfo.setWxOpenId(openid);
                 driverInfoMapper.insert(driverInfo);

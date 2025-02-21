@@ -1,9 +1,9 @@
 package com.qrh.youshangdache.driver.service;
 
-import com.atguigu.daijia.model.form.driver.DriverFaceModelForm;
-import com.atguigu.daijia.model.form.driver.UpdateDriverAuthInfoForm;
-import com.atguigu.daijia.model.vo.driver.DriverAuthInfoVo;
-import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
+import com.qrh.youshangdache.model.form.driver.DriverFaceModelForm;
+import com.qrh.youshangdache.model.form.driver.UpdateDriverAuthInfoForm;
+import com.qrh.youshangdache.model.vo.driver.DriverAuthInfoVo;
+import com.qrh.youshangdache.model.vo.driver.DriverLoginVo;
 
 public interface DriverService {
 

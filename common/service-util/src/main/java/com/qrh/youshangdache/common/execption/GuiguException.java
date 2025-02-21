@@ -35,11 +35,5 @@ public class GuiguException extends RuntimeException {
         this.message = resultCodeEnum.getMessage();
     }
 
-    @Override
-    public String toString() {
-        return "GuiguException{" +
-                "code=" + code +
-                ", message=" + this.getMessage() +
-                '}';
-    }
+
 }

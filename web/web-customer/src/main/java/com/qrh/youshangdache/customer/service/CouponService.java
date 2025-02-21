@@ -1,10 +1,10 @@
 package com.qrh.youshangdache.customer.service;
 
-import com.atguigu.daijia.model.vo.base.PageVo;
-import com.atguigu.daijia.model.vo.coupon.AvailableCouponVo;
-import com.atguigu.daijia.model.vo.coupon.NoReceiveCouponVo;
-import com.atguigu.daijia.model.vo.coupon.NoUseCouponVo;
-import com.atguigu.daijia.model.vo.coupon.UsedCouponVo;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.coupon.AvailableCouponVo;
+import com.qrh.youshangdache.model.vo.coupon.NoReceiveCouponVo;
+import com.qrh.youshangdache.model.vo.coupon.NoUseCouponVo;
+import com.qrh.youshangdache.model.vo.coupon.UsedCouponVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.math.BigDecimal;
