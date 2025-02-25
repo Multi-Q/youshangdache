@@ -35,11 +35,13 @@ public class LocationController {
     }
 
     @Operation(summary = "司机赶往代驾起始点，更新订单地址到缓存")
-    @DeleteMapping("/updateOrderLocationToCache")
+    @Login
+    @PostMapping("/updateOrderLocationToCache")
     public Result<Boolean> updateOrderLocationToCache(@RequestBody UpdateOrderLocationForm updateOrderLocationForm) {
         return Result.ok(locationService.updateOrderLocationToCache(updateOrderLocationForm));
     }
     @Operation(summary = "批量保存代驾服务订单位置")
+    @Login
     @PostMapping("/saveOrderServiceLocation")
     public Result<Boolean> saveOrderServiceLocation(@RequestBody List<OrderServiceLocationForm> orderServiceLocationForms) {
         return Result.ok(locationService.saveOrderServiceLocation(orderServiceLocationForms));

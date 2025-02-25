@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.map.repository;
 
-import com.atguigu.daijia.model.entity.map.OrderServiceLocation;
+import com.qrh.youshangdache.model.entity.map.OrderServiceLocation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

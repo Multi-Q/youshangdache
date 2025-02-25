@@ -1,14 +1,14 @@
 package com.qrh.youshangdache.map.controller;
 
-import com.atguigu.daijia.common.result.Result;
+import com.qrh.youshangdache.common.result.Result;
 import com.qrh.youshangdache.map.service.LocationService;
-import com.atguigu.daijia.model.form.map.OrderServiceLocationForm;
-import com.atguigu.daijia.model.form.map.SearchNearByDriverForm;
-import com.atguigu.daijia.model.form.map.UpdateDriverLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateOrderLocationForm;
-import com.atguigu.daijia.model.vo.map.NearByDriverVo;
-import com.atguigu.daijia.model.vo.map.OrderLocationVo;
-import com.atguigu.daijia.model.vo.map.OrderServiceLastLocationVo;
+import com.qrh.youshangdache.model.form.map.OrderServiceLocationForm;
+import com.qrh.youshangdache.model.form.map.SearchNearByDriverForm;
+import com.qrh.youshangdache.model.form.map.UpdateDriverLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateOrderLocationForm;
+import com.qrh.youshangdache.model.vo.map.NearByDriverVo;
+import com.qrh.youshangdache.model.vo.map.OrderLocationVo;
+import com.qrh.youshangdache.model.vo.map.OrderServiceLastLocationVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;

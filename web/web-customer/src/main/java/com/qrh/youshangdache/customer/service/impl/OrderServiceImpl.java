@@ -176,6 +176,11 @@ public class OrderServiceImpl implements OrderService {
         return orderInfoFeignClient.getOrderStatus(orderId).getData();
     }
 
+    /**
+     * 预估订单费用
+     * @param expectOrderForm
+     * @return
+     */
     @Override
     public ExpectOrderVo expectOrder(ExpectOrderForm expectOrderForm) {
         //计算驾驶线路
@@ -197,6 +202,11 @@ public class OrderServiceImpl implements OrderService {
         return expectOrderVo;
     }
 
+    /**
+     * 提交订单
+     * @param submitOrderForm
+     * @return
+     */
     @Override
     public Long submitOrder(SubmitOrderForm submitOrderForm) {
         //1.重新计算驾驶线路
@@ -215,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
         OrderInfoForm orderInfoForm = new OrderInfoForm();
         //订单位置信息
         BeanUtils.copyProperties(submitOrderForm, orderInfoForm);
-        //预估里程
+        //预估里程和费用
         orderInfoForm.setExpectDistance(drivingLineVo.getDistance());
         orderInfoForm.setExpectAmount(feeRuleResponseVo.getTotalAmount());
 

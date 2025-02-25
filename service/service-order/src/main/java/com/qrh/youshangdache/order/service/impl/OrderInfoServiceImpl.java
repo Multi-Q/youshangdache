@@ -263,7 +263,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
     }
-
+    /**
+     * 查询该司机是否有已经进行或未支付的订单信息，
+     * 订单信息的状态为：已接单、司机已到达、更新代驾车辆信息、开始服务、结束服务、待付款都视为订单未完成，该司机不能在接单
+     * @param driverId 司机id
+     * @return 当前订单信息
+     */
     @Override
     public CurrentOrderInfoVo searchDriverCurrentOrder(Long driverId) {
         Integer[] statusArray = {
@@ -363,6 +368,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return true;
     }
 
+    /**
+     * 获取订单状态
+     * @param orderId 订单id
+     * @return 订单状态
+     */
     @Override
     public Integer getOrderStatus(Long orderId) {
         LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<OrderInfo>()
@@ -376,6 +386,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderInfo.getStatus();
     }
 
+    /**
+     * 保存订单信息
+     * @param orderInfoForm
+     * @return
+     */
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public Long saveOrderInfo(OrderInfoForm orderInfoForm) {
@@ -416,7 +431,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
     }
 
-    public void log(Long orderId, Integer status) {
+    private void log(Long orderId, Integer status) {
         OrderStatusLog orderStatusLog = new OrderStatusLog();
         orderStatusLog.setOrderId(orderId);
         orderStatusLog.setOrderStatus(status);

@@ -1,9 +1,9 @@
 package com.qrh.youshangdache.rules.service.impl;
 
-import com.atguigu.daijia.model.form.rules.RewardRuleRequest;
-import com.atguigu.daijia.model.form.rules.RewardRuleRequestForm;
-import com.atguigu.daijia.model.vo.rules.RewardRuleResponse;
-import com.atguigu.daijia.model.vo.rules.RewardRuleResponseVo;
+import com.qrh.youshangdache.model.form.rules.RewardRuleRequest;
+import com.qrh.youshangdache.model.form.rules.RewardRuleRequestForm;
+import com.qrh.youshangdache.model.vo.rules.RewardRuleResponse;
+import com.qrh.youshangdache.model.vo.rules.RewardRuleResponseVo;
 import com.qrh.youshangdache.rules.service.RewardRuleService;
 import com.qrh.youshangdache.rules.utils.DroolsUtils;
 import lombok.extern.slf4j.Slf4j;

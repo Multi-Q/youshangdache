@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.dispatch.service;
 
-import com.atguigu.daijia.model.vo.dispatch.NewOrderTaskVo;
-import com.atguigu.daijia.model.vo.order.NewOrderDataVo;
+import com.qrh.youshangdache.model.vo.dispatch.NewOrderTaskVo;
+import com.qrh.youshangdache.model.vo.order.NewOrderDataVo;
 
 import java.util.List;
 

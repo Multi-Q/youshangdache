@@ -5,6 +5,7 @@ import com.qrh.youshangdache.model.form.rules.FeeRuleRequest;
 import com.qrh.youshangdache.model.form.rules.FeeRuleRequestForm;
 import com.qrh.youshangdache.model.vo.rules.FeeRuleResponse;
 import com.qrh.youshangdache.model.vo.rules.FeeRuleResponseVo;
+import com.qrh.youshangdache.rules.mapper.FeeRuleMapper;
 import com.qrh.youshangdache.rules.service.FeeRuleService;
 import com.qrh.youshangdache.rules.utils.DroolsUtils;
 import jakarta.annotation.Resource;
@@ -22,8 +23,6 @@ public class FeeRuleServiceImpl implements FeeRuleService {
 
     private static final String FEE_RULE_DRL="rules/FeeRule.drl";
 
-    @Resource
-    private KieContainer kieContainer;
 
     /**
      * 计算订单费用

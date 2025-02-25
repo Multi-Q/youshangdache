@@ -1,23 +1,23 @@
 package com.qrh.youshangdache.map.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.atguigu.daijia.common.constant.RedisConstant;
-import com.atguigu.daijia.common.constant.SystemConstant;
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.common.util.LocationUtil;
-import com.atguigu.daijia.driver.client.DriverInfoFeignClient;
+import com.qrh.youshangdache.common.constant.RedisConstant;
+import com.qrh.youshangdache.common.constant.SystemConstant;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.common.util.LocationUtil;
+import com.qrh.youshangdache.driver.client.DriverInfoFeignClient;
 import com.qrh.youshangdache.map.repository.OrderServiceLocationRepository;
 import com.qrh.youshangdache.map.service.LocationService;
-import com.atguigu.daijia.model.entity.driver.DriverSet;
-import com.atguigu.daijia.model.entity.map.OrderServiceLocation;
-import com.atguigu.daijia.model.form.map.OrderServiceLocationForm;
-import com.atguigu.daijia.model.form.map.SearchNearByDriverForm;
-import com.atguigu.daijia.model.form.map.UpdateDriverLocationForm;
-import com.atguigu.daijia.model.form.map.UpdateOrderLocationForm;
-import com.atguigu.daijia.model.vo.map.NearByDriverVo;
-import com.atguigu.daijia.model.vo.map.OrderLocationVo;
-import com.atguigu.daijia.model.vo.map.OrderServiceLastLocationVo;
-import com.atguigu.daijia.order.client.OrderInfoFeignClient;
+import com.qrh.youshangdache.model.entity.driver.DriverSet;
+import com.qrh.youshangdache.model.entity.map.OrderServiceLocation;
+import com.qrh.youshangdache.model.form.map.OrderServiceLocationForm;
+import com.qrh.youshangdache.model.form.map.SearchNearByDriverForm;
+import com.qrh.youshangdache.model.form.map.UpdateDriverLocationForm;
+import com.qrh.youshangdache.model.form.map.UpdateOrderLocationForm;
+import com.qrh.youshangdache.model.vo.map.NearByDriverVo;
+import com.qrh.youshangdache.model.vo.map.OrderLocationVo;
+import com.qrh.youshangdache.model.vo.map.OrderServiceLastLocationVo;
+import com.qrh.youshangdache.order.client.OrderInfoFeignClient;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -187,6 +187,11 @@ public class LocationServiceImpl implements LocationService {
         return list;
     }
 
+    /**
+     * 实时更新司机位置
+     * @param updateDriverLocationForm
+     * @return
+     */
     @Override
     public Boolean updateDriverLocation(UpdateDriverLocationForm updateDriverLocationForm) {
         //     Redis GEO 主要用于存储地理位置信息，并对存储的信息进行相关操作，该功能在 Redis 3.2 版本新增。
@@ -196,6 +201,11 @@ public class LocationServiceImpl implements LocationService {
         return true;
     }
 
+    /**
+     * 接单完成，删除司机位置
+     * @param driverId 司机id
+     * @return
+     */
     @Override
     public Boolean removeDriverLocation(Long driverId) {
         stringRedisTemplate.opsForGeo().remove(RedisConstant.DRIVER_GEO_LOCATION, driverId.toString());

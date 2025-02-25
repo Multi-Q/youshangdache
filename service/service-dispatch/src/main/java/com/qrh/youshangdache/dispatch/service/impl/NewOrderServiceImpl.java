@@ -2,18 +2,18 @@ package com.qrh.youshangdache.dispatch.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.atguigu.daijia.common.constant.RedisConstant;
+import com.qrh.youshangdache.common.constant.RedisConstant;
 import com.qrh.youshangdache.dispatch.mapper.OrderJobMapper;
 import com.qrh.youshangdache.dispatch.service.NewOrderService;
 import com.qrh.youshangdache.dispatch.xxl.client.XxlJobClient;
-import com.atguigu.daijia.map.client.LocationFeignClient;
-import com.atguigu.daijia.model.entity.dispatch.OrderJob;
-import com.atguigu.daijia.model.enums.OrderStatus;
-import com.atguigu.daijia.model.form.map.SearchNearByDriverForm;
-import com.atguigu.daijia.model.vo.dispatch.NewOrderTaskVo;
-import com.atguigu.daijia.model.vo.map.NearByDriverVo;
-import com.atguigu.daijia.model.vo.order.NewOrderDataVo;
-import com.atguigu.daijia.order.client.OrderInfoFeignClient;
+import com.qrh.youshangdache.map.client.LocationFeignClient;
+import com.qrh.youshangdache.model.entity.dispatch.OrderJob;
+import com.qrh.youshangdache.model.enums.OrderStatus;
+import com.qrh.youshangdache.model.form.map.SearchNearByDriverForm;
+import com.qrh.youshangdache.model.vo.dispatch.NewOrderTaskVo;
+import com.qrh.youshangdache.model.vo.map.NearByDriverVo;
+import com.qrh.youshangdache.model.vo.order.NewOrderDataVo;
+import com.qrh.youshangdache.order.client.OrderInfoFeignClient;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +44,22 @@ public class NewOrderServiceImpl implements NewOrderService {
     private StringRedisTemplate stringRedisTemplate;
 
 
+    /**
+     * 当司机接单成功后，就需要清空临时队列，释放系统空间
+     * @param driverId 司机id
+     * @return true|false
+     */
     @Override
     public Boolean clearNewOrderQueueData(Long driverId) {
         String key = RedisConstant.DRIVER_ORDER_TEMP_LIST + driverId;
         return  stringRedisTemplate.delete(key);
     }
 
+    /**
+     * 司机查找新订单队列的数据
+     * @param driverId 司机id
+     * @return 新订单数据对象
+     */
     @Override
     public List<NewOrderDataVo> findNewOrderQueueData(Long driverId) {
         List<NewOrderDataVo> list = new ArrayList<>();
@@ -62,6 +72,11 @@ public class NewOrderServiceImpl implements NewOrderService {
         return list;
     }
 
+    /**
+     * 执行调度任务
+     * @param jobId 任务id
+     * @return
+     */
     @Override
     public Boolean executeTask(Long jobId) {
         //获取任务参数
@@ -125,7 +140,11 @@ public class NewOrderServiceImpl implements NewOrderService {
     public Long addAndStartTask(NewOrderTaskVo newOrderTaskVo) {
         OrderJob orderJob = orderJobMapper.selectOne(new LambdaQueryWrapper<OrderJob>().eq(OrderJob::getOrderId, newOrderTaskVo.getOrderId()));
         if(null == orderJob) {
-            Long jobId = xxlJobClient.addAndStart("newOrderTaskHandler", "", "0 0/1 * * * ?", "新订单任务,订单id："+newOrderTaskVo.getOrderId());
+            Long jobId = xxlJobClient.addAndStart("newOrderTaskHandler",
+                    "",
+                    "0 0/1 * * * ?",
+                    "新订单任务,订单id："+newOrderTaskVo.getOrderId()
+            );
 
             //记录订单与任务的关联信息
             orderJob = new OrderJob();

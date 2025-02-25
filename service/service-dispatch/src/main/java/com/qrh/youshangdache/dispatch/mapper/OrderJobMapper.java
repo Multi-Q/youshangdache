@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.dispatch.mapper;
 
-import com.atguigu.daijia.model.entity.dispatch.OrderJob;
+import com.qrh.youshangdache.model.entity.dispatch.OrderJob;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

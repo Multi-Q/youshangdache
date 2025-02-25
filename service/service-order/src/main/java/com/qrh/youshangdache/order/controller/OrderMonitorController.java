@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.order.controller;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.order.OrderMonitor;
-import com.atguigu.daijia.model.entity.order.OrderMonitorRecord;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.order.OrderMonitor;
+import com.qrh.youshangdache.model.entity.order.OrderMonitorRecord;
 import com.qrh.youshangdache.order.service.OrderMonitorService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;

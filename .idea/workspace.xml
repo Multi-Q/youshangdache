@@ -4,39 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dfe11dc5-4e1b-4bd2-839f-2582cf591d09" name="更改" comment="修复了service-customer模块的一些潜在的bug，如查询数据为null时操作该对象导致空指针异常">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="dfe11dc5-4e1b-4bd2-839f-2582cf591d09" name="更改" comment="添加新的订单计费规则，修改规则，精简代码">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/src/main/java/com/qrh/youshangdache/model/enums/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/com/qrh/youshangdache/model/enums/OrderStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-client/service-driver-client/src/main/java/com/qrh/youshangdache/driver/client/OcrFeignClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-client/service-driver-client/src/main/java/com/qrh/youshangdache/driver/client/OcrFeignClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/controller/NewOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/controller/NewOrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/OrderJobMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/OrderJobMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/XxlJobLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/XxlJobLogMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/NewOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/NewOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/impl/NewOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/impl/NewOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/client/XxlJobClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/client/XxlJobClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/config/XxlJobConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/config/XxlJobConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/job/DispatchJobHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/job/DispatchJobHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/DriverInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/DriverInfoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/controller/MapController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/controller/MapController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/MapService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/MapService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/impl/MapServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/impl/MapServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/controller/OrderInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/controller/OrderInfoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderBillMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderBillMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderInfoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderInfoMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderProfitsharingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderProfitsharingMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderStatusLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderStatusLogMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/OrderInfoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/OrderInfoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/OrderMonitorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/OrderMonitorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/controller/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/controller/LocationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/repository/OrderServiceLocationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/repository/OrderServiceLocationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/LocationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/LocationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/impl/LocationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/impl/LocationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/controller/OrderMonitorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/controller/OrderMonitorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderMonitorMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderMonitorMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/repository/OrderMonitorRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/repository/OrderMonitorRecordRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderInfoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/controller/FeeRuleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/controller/FeeRuleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/FeeRuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/FeeRuleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/ProfitsharingRuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/ProfitsharingRuleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderMonitorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderMonitorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/RewardRuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/RewardRuleService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/FeeRuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/FeeRuleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/ProfitsharingRuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/ProfitsharingRuleServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/RewardRuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/RewardRuleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/utils/DroolsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/utils/DroolsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/resources/rules/FeeRule.drl" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/resources/rules/FeeRule.drl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/resources/rules/ProfitsharingRule.drl" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/resources/rules/ProfitsharingRule.drl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/resources/rules/RewardRule.drl" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/resources/rules/RewardRule.drl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/utils/DroolsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/utils/DroolsUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/web-customer/src/main/java/com/qrh/youshangdache/customer/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-customer/src/main/java/com/qrh/youshangdache/customer/service/impl/OrderServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/LocationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/MonitorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/MonitorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/OcrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/OcrController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/service/OcrService.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/service/OcrService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/OcrServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/OcrServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/资料/DEFAULT_GROUP/service-dispatch-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/资料/DEFAULT_GROUP/service-dispatch-dev.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,26 +95,26 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/1A_Java_Projects/youshangdache/common",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/1A_Java_Projects/youshangdache/common&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Code Search&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\1A_Java_Projects\youshangdache\common" />
@@ -249,7 +243,11 @@
       <workItem from="1740033384197" duration="105000" />
       <workItem from="1740033504725" duration="4860000" />
       <workItem from="1740045851202" duration="3788000" />
-      <workItem from="1740109505214" duration="16098000" />
+      <workItem from="1740109505214" duration="22782000" />
+      <workItem from="1740239007298" duration="705000" />
+      <workItem from="1740240290072" duration="307000" />
+      <workItem from="1740472180020" duration="2134000" />
+      <workItem from="1740490796600" duration="477000" />
     </task>
     <task id="LOCAL-00001" summary="修改部分文件，完善代码规范">
       <option name="closed" value="true" />
@@ -283,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740118034552</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="添加新的订单计费规则，修改规则，精简代码">
+      <option name="closed" value="true" />
+      <created>1740137573473</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1740137573474</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -317,6 +323,11 @@
     <MESSAGE value="修改部分文件，完善代码规范" />
     <MESSAGE value="修改部分文件和一些bug，完善代码规范" />
     <MESSAGE value="修复了service-customer模块的一些潜在的bug，如查询数据为null时操作该对象导致空指针异常" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复了service-customer模块的一些潜在的bug，如查询数据为null时操作该对象导致空指针异常" />
+    <MESSAGE value="添加新的订单计费规则，修改规则，精简代码" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加新的订单计费规则，修改规则，精简代码" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

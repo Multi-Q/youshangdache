@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.order.service.impl;
 
-import com.atguigu.daijia.model.entity.order.OrderMonitor;
-import com.atguigu.daijia.model.entity.order.OrderMonitorRecord;
+import com.qrh.youshangdache.model.entity.order.OrderMonitor;
+import com.qrh.youshangdache.model.entity.order.OrderMonitorRecord;
 import com.qrh.youshangdache.order.mapper.OrderMonitorMapper;
 import com.qrh.youshangdache.order.repository.OrderMonitorRecordRepository;
 import com.qrh.youshangdache.order.service.OrderMonitorService;

@@ -1,9 +1,9 @@
 package com.qrh.youshangdache.dispatch.controller;
 
-import com.atguigu.daijia.common.result.Result;
+import com.qrh.youshangdache.common.result.Result;
 import com.qrh.youshangdache.dispatch.service.NewOrderService;
-import com.atguigu.daijia.model.vo.dispatch.NewOrderTaskVo;
-import com.atguigu.daijia.model.vo.order.NewOrderDataVo;
+import com.qrh.youshangdache.model.vo.dispatch.NewOrderTaskVo;
+import com.qrh.youshangdache.model.vo.order.NewOrderDataVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import java.util.List;
 @Tag(name = "司机新订单接口管理")
 @RestController
 @RequestMapping("/dispatch/newOrder")
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class NewOrderController {
 
     @Autowired

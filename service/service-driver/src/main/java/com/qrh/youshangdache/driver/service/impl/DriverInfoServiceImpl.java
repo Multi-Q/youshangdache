@@ -153,6 +153,11 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         return count != 0;
     }
 
+    /**
+     * 获取司机设置
+     * @param driverId
+     * @return
+     */
     @Override
     public DriverSet getDriverSet(Long driverId) {
         return driverSetMapper.selectOne(new LambdaQueryWrapper<DriverSet>().eq(DriverSet::getDriverId, driverId));

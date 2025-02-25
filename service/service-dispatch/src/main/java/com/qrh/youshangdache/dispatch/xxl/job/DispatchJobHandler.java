@@ -3,7 +3,7 @@ package com.qrh.youshangdache.dispatch.xxl.job;
 import com.alibaba.nacos.common.utils.ExceptionUtil;
 import com.qrh.youshangdache.dispatch.mapper.XxlJobLogMapper;
 import com.qrh.youshangdache.dispatch.service.NewOrderService;
-import com.atguigu.daijia.model.entity.dispatch.XxlJobLog;
+import com.qrh.youshangdache.model.entity.dispatch.XxlJobLog;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,9 @@ public class DispatchJobHandler {
     @Autowired
     private NewOrderService newOrderService;
 
+    /**
+     * 创建订单的调度任务
+     */
     @XxlJob("newOrderTaskHandler")
     public void newOrderTaskHandler() {
         log.info("新订单调度任务：{}", XxlJobHelper.getJobId());

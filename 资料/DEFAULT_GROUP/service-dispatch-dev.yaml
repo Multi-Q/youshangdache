@@ -45,7 +45,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/daijia_dispatch?characterEncoding=utf-8&useSSL=false
     username: root
-    password: shangguigu@QY123
+    password: root
     hikari:
       connection-test-query: SELECT 1
       connection-timeout: 60000

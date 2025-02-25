@@ -1,7 +1,7 @@
 package com.qrh.youshangdache.order.repository;
 
 
-import com.atguigu.daijia.model.entity.order.OrderMonitorRecord;
+import com.qrh.youshangdache.model.entity.order.OrderMonitorRecord;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
