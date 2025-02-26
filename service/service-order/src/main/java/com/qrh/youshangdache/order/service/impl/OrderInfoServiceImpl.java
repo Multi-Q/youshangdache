@@ -230,7 +230,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return true;
     }
 
+    /**
+     * 司机到达代驾起始点，联系了乘客，见到了代驾车辆，要拍照与录入车辆信息
+     * @param updateOrderCartForm
+     * @return
+     */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateOrderCart(UpdateOrderCartForm updateOrderCartForm) {
         LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<OrderInfo>()
                 .eq(OrderInfo::getId, updateOrderCartForm.getOrderId())
@@ -246,9 +252,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
     }
 
+    /**
+     * 司机到达起始点
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return
+     */
     @Override
     public Boolean driverArriveStartLocation(Long orderId, Long driverId) {
-        //跟新订单状态，到达时间
+        //更新订单状态，到达时间
         LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<OrderInfo>()
                 .eq(OrderInfo::getId, orderId)
                 .eq(OrderInfo::getDriverId, driverId);
@@ -329,13 +341,20 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return currentOrderInfoVo;
     }
 
+    /**
+     * 司机抢单
+     * @param driverId 司机id
+     * @param orderId 订单id
+     * @return
+     */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Boolean robNewOrder(Long driverId, Long orderId) {
         // 判断定是否存在
         if (!stringRedisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
             throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
-        //创建锁
+        //创建锁 order:accept:mark:{orderId}
         RLock lock = redissonClient.getLock(RedisConstant.ORDER_ACCEPT_MARK + orderId);
         try {
             if (!stringRedisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK + orderId)) {
@@ -355,7 +374,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 if (row != 1) {
                     throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
                 }
-                stringRedisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);
+                stringRedisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK + orderId);//司机抢单成功，说明用户的订单已被司机接单，那就不需要再等待接单了，删除redis中的标记
             }
 
         } catch (InterruptedException e) {

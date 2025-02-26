@@ -75,7 +75,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     }
 
     /**
-     * 获取司机的信息
+     * 乘客端进入司乘同显页面，需要加载司机的基本信息，显示司机的姓名、头像及驾龄等信息
      *
      * @param driverId 司机id
      * @return DriverInfoVo
@@ -103,8 +103,14 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         return driverInfoVo;
     }
 
-
+    /**
+     * 更新司机的接单状态
+     * @param driverId 司机id
+     * @param status 司机当前的状态
+     * @return true|false
+     */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateServiceStatus(Long driverId, Integer status) {
         LambdaQueryWrapper<DriverSet> queryWrapper = new LambdaQueryWrapper<DriverSet>().eq(DriverSet::getDriverId, driverId);
         DriverSet driverSet = new DriverSet();
@@ -147,7 +153,8 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     @Override
     public Boolean isFaceRecognition(Long driverId) {
-        LambdaQueryWrapper<DriverFaceRecognition> queryWrapper = new LambdaQueryWrapper<DriverFaceRecognition>().eq(DriverFaceRecognition::getDriverId, driverId)
+        LambdaQueryWrapper<DriverFaceRecognition> queryWrapper = new LambdaQueryWrapper<DriverFaceRecognition>()
+                .eq(DriverFaceRecognition::getDriverId, driverId)
                 .eq(DriverFaceRecognition::getFaceDate, new DateTime().toString("yyyy-MM-dd"));
         Long count = driverFaceRecognitionMapper.selectCount(queryWrapper);
         return count != 0;

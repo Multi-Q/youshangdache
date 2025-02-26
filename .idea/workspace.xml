@@ -4,33 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dfe11dc5-4e1b-4bd2-839f-2582cf591d09" name="更改" comment="添加新的订单计费规则，修改规则，精简代码">
+    <list default="true" id="dfe11dc5-4e1b-4bd2-839f-2582cf591d09" name="更改" comment="修改部分代码">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/controller/NewOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/controller/NewOrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/OrderJobMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/OrderJobMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/XxlJobLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/mapper/XxlJobLogMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/NewOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/NewOrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/impl/NewOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/service/impl/NewOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/client/XxlJobClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/client/XxlJobClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/config/XxlJobConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/config/XxlJobConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/job/DispatchJobHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-dispatch/src/main/java/com/qrh/youshangdache/dispatch/xxl/job/DispatchJobHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/service-util/src/main/java/com/qrh/youshangdache/common/constant/RedisConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/service-util/src/main/java/com/qrh/youshangdache/common/constant/RedisConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/src/main/java/com/qrh/youshangdache/model/vo/map/OrderLocationVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/src/main/java/com/qrh/youshangdache/model/vo/map/OrderLocationVo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/DriverInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/DriverInfoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/controller/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/controller/LocationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/repository/OrderServiceLocationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/repository/OrderServiceLocationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/LocationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/LocationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/impl/LocationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-map/src/main/java/com/qrh/youshangdache/map/service/impl/LocationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/controller/OrderMonitorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/controller/OrderMonitorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderMonitorMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/mapper/OrderMonitorMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/repository/OrderMonitorRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/repository/OrderMonitorRecordRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderInfoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderMonitorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-order/src/main/java/com/qrh/youshangdache/order/service/impl/OrderMonitorServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/RewardRuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/RewardRuleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/FeeRuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/FeeRuleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/RewardRuleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/service/impl/RewardRuleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/utils/DroolsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/service/service-rules/src/main/java/com/qrh/youshangdache/rules/utils/DroolsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-customer/src/main/java/com/qrh/youshangdache/customer/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-customer/src/main/java/com/qrh/youshangdache/customer/service/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/LocationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/资料/DEFAULT_GROUP/service-dispatch-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/资料/DEFAULT_GROUP/service-dispatch-dev.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/DriverController.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/controller/DriverController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/DriverServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/web-driver/src/main/java/com/qrh/youshangdache/driver/service/impl/DriverServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,7 +229,8 @@
       <workItem from="1740239007298" duration="705000" />
       <workItem from="1740240290072" duration="307000" />
       <workItem from="1740472180020" duration="2134000" />
-      <workItem from="1740490796600" duration="477000" />
+      <workItem from="1740490796600" duration="4477000" />
+      <workItem from="1740574628138" duration="1313000" />
     </task>
     <task id="LOCAL-00001" summary="修改部分文件，完善代码规范">
       <option name="closed" value="true" />
@@ -289,7 +272,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740137573474</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="修改部分代码">
+      <option name="closed" value="true" />
+      <created>1740492996694</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1740492996694</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -324,7 +315,8 @@
     <MESSAGE value="修改部分文件和一些bug，完善代码规范" />
     <MESSAGE value="修复了service-customer模块的一些潜在的bug，如查询数据为null时操作该对象导致空指针异常" />
     <MESSAGE value="添加新的订单计费规则，修改规则，精简代码" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加新的订单计费规则，修改规则，精简代码" />
+    <MESSAGE value="修改部分代码" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改部分代码" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

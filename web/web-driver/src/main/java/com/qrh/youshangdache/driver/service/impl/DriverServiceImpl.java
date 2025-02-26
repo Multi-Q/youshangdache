@@ -32,6 +32,11 @@ public class DriverServiceImpl implements DriverService {
     @Resource
     private NewOrderFeignClient newOrderFeignClient;
 
+    /**
+     * 司机接单成功后，关闭接单功能
+     * @param driverId 司机id
+     * @return
+     */
     @Override
     public Boolean stopService(Long driverId) {
         //更新司机的接单状态
@@ -43,11 +48,16 @@ public class DriverServiceImpl implements DriverService {
         return true;
     }
 
+    /**
+     * 司机开始接单
+     * @param driverId 司机id
+     * @return
+     */
     @Override
     public Boolean startService(Long driverId) {
         //判断是否完成了验证
         DriverLoginVo driverLoginVo = driverInfoFeignClient.getDriverLoginInfo(driverId).getData();
-        if (driverLoginVo.getAuthStatus() != 2) {
+        if (driverLoginVo.getAuthStatus().intValue() != 2) {
             throw new GuiguException(ResultCodeEnum.AUTH_ERROR);
         }
         //判断当日是否人脸识别
@@ -57,7 +67,7 @@ public class DriverServiceImpl implements DriverService {
         }
         //更新订单状态
         driverInfoFeignClient.updateServiceStatus(driverId, 1);
-        //删除redis的司机信息
+        //删除redis的司机的位置信息
         locationFeignClient.removeDriverLocation(driverId);
         //清空司机临时订单数据
         newOrderFeignClient.clearNewOrderQueueData(driverId);

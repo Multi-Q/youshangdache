@@ -116,13 +116,24 @@ public class LocationServiceImpl implements LocationService {
         return null;
     }
 
+    /**
+     * 从redis缓存中获取当前司机的实时位置
+     *
+     * @param orderId 订单id
+     * @return
+     */
     @Override
     public OrderLocationVo getCacheOrderLocation(Long orderId) {
-        String key = RedisConstant.UPDATE_ORDER_LOCATION + orderId;
-        OrderLocationVo orderLocationVo = JSON.parseObject(key, OrderLocationVo.class);
-        return orderLocationVo;
+        return JSON.parseObject(stringRedisTemplate.opsForValue().get(RedisConstant.UPDATE_ORDER_LOCATION + orderId),
+                OrderLocationVo.class);
     }
 
+    /**
+     * 司机赶往代驾点，会实时更新司机的经纬度位置到Redis缓存，这样乘客端才能看见司机的动向，司机端更新，乘客端获取
+     *
+     * @param updateOrderLocationForm
+     * @return
+     */
     @Override
     public Boolean updateOrderLocationToCache(UpdateOrderLocationForm updateOrderLocationForm) {
         String key = RedisConstant.UPDATE_ORDER_LOCATION + updateOrderLocationForm.getOrderId();
@@ -189,6 +200,7 @@ public class LocationServiceImpl implements LocationService {
 
     /**
      * 实时更新司机位置
+     *
      * @param updateDriverLocationForm
      * @return
      */
@@ -203,6 +215,7 @@ public class LocationServiceImpl implements LocationService {
 
     /**
      * 接单完成，删除司机位置
+     *
      * @param driverId 司机id
      * @return
      */

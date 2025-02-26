@@ -79,8 +79,7 @@ public class DriverController {
     @Login
     @PostMapping("/startService")
     public Result<Boolean> startService() {
-        Long driverId = AuthContextHolder.getUserId();
-        return Result.ok(driverService.startService(driverId));
+        return Result.ok(driverService.startService(AuthContextHolder.getUserId()));
     }
 
     @Operation(summary = "停止接单服务")
