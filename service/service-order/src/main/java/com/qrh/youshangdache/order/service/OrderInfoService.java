@@ -52,4 +52,10 @@ public interface OrderInfoService extends IService<OrderInfo> {
     void orderCancel(Long parseLong);
 
     Boolean updateCouponAmount(Long orderId, BigDecimal couponAmount);
+
+    /**
+     * 系统取消订单
+     * @param orderId 订单id
+     */
+    void systemCancelOrder(Long orderId);
 }

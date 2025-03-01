@@ -3,9 +3,12 @@ package com.qrh.youshangdache.order.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qrh.youshangdache.common.constant.MqConst;
 import com.qrh.youshangdache.common.constant.RedisConstant;
+import com.qrh.youshangdache.common.constant.SystemConstant;
 import com.qrh.youshangdache.common.execption.GuiguException;
 import com.qrh.youshangdache.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.service.RabbitService;
 import com.qrh.youshangdache.model.entity.order.*;
 import com.qrh.youshangdache.model.enums.OrderStatus;
 import com.qrh.youshangdache.model.form.order.OrderInfoForm;
@@ -34,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -54,10 +59,39 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private OrderBillMapper orderBillMapper;
     @Resource
     private OrderProfitsharingMapper orderProfitsharingMapper;
+    @Resource
+    private RabbitService rabbitService;
+
+    /**
+     * 系统取消订单
+     *
+     * @param orderId 订单id
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void systemCancelOrder(Long orderId) {
+        Integer orderStatus = this.getOrderStatus(orderId);
+        if (null != orderStatus && orderStatus.intValue() == OrderStatus.WAITING_ACCEPT.getStatus().intValue()) {
+            //取消订单
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.setId(orderId);
+            orderInfo.setStatus(OrderStatus.CANCEL_ORDER.getStatus());
+            int row = orderInfoMapper.updateById(orderInfo);
+            if (row == 1) {
+                //记录日志
+                this.log(orderInfo.getId(), orderInfo.getStatus());
+
+                //删除redis订单标识
+                stringRedisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+            } else {
+                throw new GuiguException(ResultCodeEnum.UPDATE_ERROR);
+            }
+        }
+    }
 
     @Override
     public Boolean updateCouponAmount(Long orderId, BigDecimal couponAmount) {
-        orderBillMapper.updateCouponAmount(orderId,couponAmount);
+        orderBillMapper.updateCouponAmount(orderId, couponAmount);
         return true;
     }
 
@@ -164,35 +198,58 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return pageVo;
     }
 
+    /**
+     * 司机到达终点
+     *
+     * @param updateOrderBillForm
+     * @return
+     */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Boolean endDrive(UpdateOrderBillForm updateOrderBillForm) {
         LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<OrderInfo>()
                 .eq(OrderInfo::getId, updateOrderBillForm.getOrderId())
                 .eq(OrderInfo::getDriverId, updateOrderBillForm.getDriverId());
+
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setStatus(OrderStatus.END_SERVICE.getStatus());
         orderInfo.setRealAmount(updateOrderBillForm.getTotalAmount());
         orderInfo.setFavourFee(updateOrderBillForm.getFavourFee());
         orderInfo.setRealDistance(updateOrderBillForm.getRealDistance());
         orderInfo.setEndServiceTime(new Date());
-        int update = orderInfoMapper.update(orderInfo, wrapper);
-        if (update > 0) {
-            OrderBill orderBill = new OrderBill();
-            BeanUtils.copyProperties(updateOrderBillForm, orderBill);
-            orderBill.setOrderId(updateOrderBillForm.getOrderId());
-            orderBill.setPayAmount(updateOrderBillForm.getTotalAmount());
-            orderBillMapper.insert(orderBill);
 
-            OrderProfitsharing orderProfitsharing = new OrderProfitsharing();
-            BeanUtils.copyProperties(updateOrderBillForm, orderProfitsharing);
-            orderProfitsharing.setOrderId(updateOrderBillForm.getOrderId());
-            orderProfitsharing.setRuleId(updateOrderBillForm.getProfitsharingRuleId());
-            orderProfitsharing.setStatus(1);
-            orderProfitsharingMapper.insert(orderProfitsharing);
+        int update = orderInfoMapper.update(orderInfo, wrapper);
+
+        if (update > 0) {
+            CompletableFuture<Void> orderBillCF = CompletableFuture.runAsync(() -> {
+                OrderBill orderBill = new OrderBill();
+                BeanUtils.copyProperties(updateOrderBillForm, orderBill);
+
+                orderBill.setOrderId(updateOrderBillForm.getOrderId());
+                orderBill.setPayAmount(updateOrderBillForm.getTotalAmount());
+                orderBillMapper.insert(orderBill);
+            });
+
+            CompletableFuture<Void> orderProfitsharingCF = CompletableFuture.runAsync(() -> {
+                OrderProfitsharing orderProfitsharing = new OrderProfitsharing();
+                BeanUtils.copyProperties(updateOrderBillForm, orderProfitsharing);
+
+                orderProfitsharing.setOrderId(updateOrderBillForm.getOrderId());
+                orderProfitsharing.setRuleId(updateOrderBillForm.getProfitsharingRuleId());
+                orderProfitsharing.setStatus(1);
+
+                orderProfitsharingMapper.insert(orderProfitsharing);
+            });
+
+            try {
+                CompletableFuture.allOf(orderBillCF, orderProfitsharingCF).get();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return true;
         } else {
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
-        return true;
     }
 
     @Override
@@ -204,12 +261,18 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return count;
     }
 
+    /**
+     * 代驾开始
+     *
+     * @param startDriveForm
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean startDrive(StartDriveForm startDriveForm) {
-        LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(OrderInfo::getId, startDriveForm.getOrderId());
-        queryWrapper.eq(OrderInfo::getDriverId, startDriveForm.getDriverId());
+        LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<OrderInfo>()
+                .eq(OrderInfo::getId, startDriveForm.getOrderId())
+                .eq(OrderInfo::getDriverId, startDriveForm.getDriverId());
 
         OrderInfo updateOrderInfo = new OrderInfo();
         updateOrderInfo.setStatus(OrderStatus.START_SERVICE.getStatus());
@@ -232,6 +295,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 司机到达代驾起始点，联系了乘客，见到了代驾车辆，要拍照与录入车辆信息
+     *
      * @param updateOrderCartForm
      * @return
      */
@@ -254,6 +318,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 司机到达起始点
+     *
      * @param orderId  订单id
      * @param driverId 司机id
      * @return
@@ -275,9 +340,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
     }
+
     /**
      * 查询该司机是否有已经进行或未支付的订单信息，
      * 订单信息的状态为：已接单、司机已到达、更新代驾车辆信息、开始服务、结束服务、待付款都视为订单未完成，该司机不能在接单
+     *
      * @param driverId 司机id
      * @return 当前订单信息
      */
@@ -311,6 +378,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     /**
      * 查询该乘客是否有已经进行或未支付的订单信息，
      * 订单信息的状态为：已接单、司机已到达、更新代驾车辆信息、开始服务、结束服务、待付款都视为订单未完成，该乘客不能再叫车
+     *
      * @param customerId 乘客id
      * @return 当前订单信息
      */
@@ -326,7 +394,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         };
         LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<OrderInfo>()
                 .eq(OrderInfo::getCustomerId, customerId)
-                .in(OrderInfo::getStatus,  statusArray)
+                .in(OrderInfo::getStatus, statusArray)
                 .orderByDesc(OrderInfo::getId)
                 .last(" limit 1");
         OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
@@ -343,8 +411,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 司机抢单
+     *
      * @param driverId 司机id
-     * @param orderId 订单id
+     * @param orderId  订单id
      * @return
      */
     @Override
@@ -389,6 +458,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 获取订单状态
+     *
      * @param orderId 订单id
      * @return 订单状态
      */
@@ -407,6 +477,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 保存订单信息
+     *
      * @param orderInfoForm
      * @return
      */
@@ -429,6 +500,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                         "0",
                         RedisConstant.ORDER_ACCEPT_MARK_EXPIRES_TIME,
                         TimeUnit.MINUTES);
+
+        //发送延迟消息，取消订单
+        rabbitService.sendDelayMessage(MqConst.EXCHANGE_CANCEL_ORDER,
+                MqConst.ROUTING_CANCEL_ORDER,
+                String.valueOf(orderInfo.getId()),
+                SystemConstant.CANCEL_ORDER_DELAY_TIME);
         return orderInfo.getId();
     }
 

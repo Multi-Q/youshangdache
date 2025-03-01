@@ -58,7 +58,11 @@ public class LocationServiceImpl implements LocationService {
     @Resource
     private OrderInfoFeignClient orderInfoFeignClient;
 
-
+    /**
+     * 计算订单真实距离
+     * @param orderId 订单id
+     * @return
+     */
     @Override
     public BigDecimal calculateOrderRealDistance(Long orderId) {
         // 根据订单id获取代驾订单位置信息，根据创建时间升序排序
@@ -88,6 +92,11 @@ public class LocationServiceImpl implements LocationService {
         return BigDecimal.valueOf(realDistance);
     }
 
+    /**
+     * 司机开始代驾后，乘客端要获取司机的动向，就必须定时获取上面更新的最后一个位置信息。
+     * @param orderId 订单id
+     * @return 最后一个位置信息
+     */
     @Override
     public OrderServiceLastLocationVo getOrderServiceLastLocation(Long orderId) {
         OrderServiceLocation orderServiceLocation = mongoTemplate.findOne(
@@ -101,6 +110,11 @@ public class LocationServiceImpl implements LocationService {
         return orderServiceLastLocationVo;
     }
 
+    /**
+     * 司机开始代驾后，为了减少请求次数，司机端会实时收集变更的GPS定位信息，定时批量上传到后台服务器。
+     * @param orderServiceLocationForms
+     * @return
+     */
     @Override
     public Boolean saveOrderServiceLocation(List<OrderServiceLocationForm> orderServiceLocationForms) {
         List<OrderServiceLocation> list = new ArrayList<>();
@@ -113,7 +127,7 @@ public class LocationServiceImpl implements LocationService {
         });
         orderServiceLocationRepository.saveAll(list);
 
-        return null;
+        return true;
     }
 
     /**
