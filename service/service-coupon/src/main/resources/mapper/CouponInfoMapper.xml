@@ -91,6 +91,7 @@
         order by cstr.id desc
     </select>
 
+    <!-- 更新优惠券数量-->
     <update id="updateReceiveCount">
         update coupon_info
         set receive_count = receive_count + 1

@@ -23,7 +23,9 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -158,7 +160,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
     public Boolean receive(Long customerId, Long couponId) {
         //1、查询优惠券
         CouponInfo couponInfo = this.getById(couponId);
-        if (null == couponInfo) {
+        if(null == couponInfo) {
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
 
@@ -168,11 +170,14 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         }
 
         //3、校验库存，优惠券领取数量判断
-        if (couponInfo.getPublishCount() != 0 && couponInfo.getReceiveCount() >= couponInfo.getPublishCount()) {
+        if (couponInfo.getPublishCount() !=0 && couponInfo.getReceiveCount() >= couponInfo.getPublishCount()) {
             throw new GuiguException(ResultCodeEnum.COUPON_LESS);
         }
+
         RLock lock = null;
         try {
+            // 初始化分布式锁
+            //每人领取限制  与 优惠券发行总数 必须保证原子性，使用customerId减少锁的粒度，增加并发能力
             lock = redissonClient.getLock(RedisConstant.COUPON_LOCK + customerId);
             boolean flag = lock.tryLock(RedisConstant.COUPON_LOCK_WAIT_TIME, RedisConstant.COUPON_LOCK_LEASE_TIME, TimeUnit.SECONDS);
             if (flag) {
@@ -187,22 +192,29 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
                 }
 
                 //5、更新优惠券领取数量
-                int row = couponInfoMapper.updateReceiveCount(couponId);
+                int row;
+                if (couponInfo.getPublishCount() == 0) {//没有限制
+                    row = couponInfoMapper.updateReceiveCount(couponId);
+                } else {
+                    //乐观锁
+                    row = couponInfoMapper.updateReceiveCountByLimit(couponId);
+                }
                 if (row == 1) {
                     //6、保存领取记录
                     this.saveCustomerCoupon(customerId, couponId, couponInfo.getExpireTime());
                     return true;
                 }
             }
-
         } catch (Exception e) {
-
+            e.printStackTrace();
+            //启用的了事务，如果try语句块内的抛出异常，事务就会回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } finally {
-            if (lock != null) {
+            if (null != lock) {
                 lock.unlock();
             }
         }
-        return true;
+        throw new GuiguException(ResultCodeEnum.COUPON_LESS);
     }
 
     private void saveCustomerCoupon(Long customerId, Long couponId, Date expireTime) {
