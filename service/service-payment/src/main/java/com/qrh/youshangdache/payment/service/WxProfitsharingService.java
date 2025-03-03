@@ -1,5 +1,7 @@
 package com.qrh.youshangdache.payment.service;
 
-public interface WxProfitsharingService {
+import com.qrh.youshangdache.model.form.payment.ProfitsharingForm;
 
+public interface WxProfitsharingService {
+    void profitsharing(ProfitsharingForm profitsharingForm);
 }

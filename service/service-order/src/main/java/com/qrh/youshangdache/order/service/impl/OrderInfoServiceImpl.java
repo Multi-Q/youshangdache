@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -61,7 +62,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private OrderProfitsharingMapper orderProfitsharingMapper;
     @Resource
     private RabbitService rabbitService;
+    @Resource
+    private ThreadPoolExecutor threadPoolExecutor;
 
+    /**
+     * 修改分账信息的状态
+     * @param orderNo 订单编号
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateProfitsharingStatus(String orderNo) {
+        //查询订单
+        OrderInfo orderInfo = orderInfoMapper.selectOne(new LambdaQueryWrapper<OrderInfo>().eq(OrderInfo::getOrderNo, orderNo).select(OrderInfo::getId));
+
+        //更新状态条件
+        LambdaQueryWrapper<OrderProfitsharing> updateQueryWrapper = new LambdaQueryWrapper<>();
+        updateQueryWrapper.eq(OrderProfitsharing::getOrderId, orderInfo.getId());
+        //更新字段
+        OrderProfitsharing updateOrderProfitsharing = new OrderProfitsharing();
+        updateOrderProfitsharing.setStatus(2);
+        orderProfitsharingMapper.update(updateOrderProfitsharing, updateQueryWrapper);
+    }
     /**
      * 系统取消订单
      *
@@ -184,6 +205,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderBillVo;
     }
 
+    /**
+     * 获取司机订单分页列表
+     * @param pageParam
+     * @param driverId 司机id
+     * @return 分页数据
+     */
     @Override
     public PageVo findDriverOrderPage(Page<OrderInfo> pageParam, Long driverId) {
         IPage<OrderListVo> pageInfo = orderInfoMapper.selectDriverOrderPage(pageParam, driverId);
@@ -191,6 +218,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return pageVo;
     }
 
+    /**
+     * 获取乘客订单分页列表
+     * @param pageParam 分页参数
+     * @param customerId 客户id
+     * @return 分页数据
+     */
     @Override
     public PageVo findCustomerOrderPage(Page<OrderInfo> pageParam, Long customerId) {
         IPage<OrderListVo> pageInfo = orderInfoMapper.selectCustomerOrderPage(pageParam, customerId);
@@ -228,7 +261,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderBill.setOrderId(updateOrderBillForm.getOrderId());
                 orderBill.setPayAmount(updateOrderBillForm.getTotalAmount());
                 orderBillMapper.insert(orderBill);
-            });
+            },threadPoolExecutor);
 
             CompletableFuture<Void> orderProfitsharingCF = CompletableFuture.runAsync(() -> {
                 OrderProfitsharing orderProfitsharing = new OrderProfitsharing();
@@ -239,7 +272,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderProfitsharing.setStatus(1);
 
                 orderProfitsharingMapper.insert(orderProfitsharing);
-            });
+            },threadPoolExecutor);
 
             try {
                 CompletableFuture.allOf(orderBillCF, orderProfitsharingCF).get();

@@ -24,7 +24,7 @@ public class RabbitService {
      *  发送消息
      * @param exchange 交换机
      * @param routingKey 路由键
-     * @param message 消息
+     * @param message 消息内容
      */
     public boolean sendMessage(String exchange, String routingKey, Object message) {
         //1.创建自定义相关消息对象-包含业务数据本身，交换器名称，路由键，队列类型，延迟时间,重试次数

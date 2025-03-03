@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.order.mapper;
 
-import com.atguigu.daijia.model.entity.order.OrderComment;
+import com.qrh.youshangdache.model.entity.order.OrderComment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

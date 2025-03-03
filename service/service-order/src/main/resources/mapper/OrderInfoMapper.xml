@@ -6,7 +6,7 @@
 <mapper namespace="com.qrh.youshangdache.order.mapper.OrderInfoMapper">
 
 
-    <select id="selectCustomerOrderPage" resultType="OrderListVo">
+    <select id="selectCustomerOrderPage" resultType="com.qrh.youshangdache.model.vo.order.OrderListVo">
         select info.id,
                info.order_no,
                info.start_location,
@@ -21,7 +21,7 @@
         order by info.create_time desc
     </select>
 
-    <select id="selectDriverOrderPage" resultType="OrderListVo">
+    <select id="selectDriverOrderPage" resultType="com.qrh.youshangdache.model.vo.order.OrderListVo">
         select info.id,
                info.order_no,
                info.start_location,
@@ -35,7 +35,7 @@
           and info.is_deleted = 0
         order by info.create_time desc
     </select>
-    <select id="selectOrderPayVo" resultType="OrderPayVo">
+    <select id="selectOrderPayVo" resultType="com.qrh.youshangdache.model.vo.order.OrderPayVo">
         select info.id as order_id,
                info.customer_id,
                info.driver_id,

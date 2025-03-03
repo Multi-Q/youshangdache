@@ -20,6 +20,17 @@ public class RedisDelayHandler {
     @Resource
     private OrderInfoService orderInfoService;
 
+    /**
+     * 利用redissonClient 发送延迟消息。<br>
+     * 创还能一个线程，然后循环从队列中获取数据，然后调用取消订单方法。<br>
+     * 步骤：
+     * <pre>{@code
+     * redissonClient.getBlockingDeque(): 创建一个阻塞队列
+     * redissonClient.getDelayedQueue(): 获取延迟队列
+     * delayedQueue.offer(): 向队列中存储数据
+     * blockingDeque.take(): 从队列中获取数据
+     * }</pre>
+     */
     @PostConstruct
     public void listener() {
         new Thread(() -> {
@@ -31,7 +42,7 @@ public class RedisDelayHandler {
                     String orderId = blockingQueue.take();
                     //取消订单
                     if (StringUtils.hasText(orderId)) {
-                        //嗲用取消订单方法
+                        //掉用取消订单方法
                         orderInfoService.orderCancel(Long.parseLong(orderId));
                     }
 

@@ -1,6 +1,6 @@
 package com.qrh.youshangdache.payment.mapper;
 
-import com.atguigu.daijia.model.entity.payment.ProfitsharingInfo;
+import com.qrh.youshangdache.model.entity.payment.ProfitsharingInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

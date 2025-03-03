@@ -3,6 +3,7 @@ package com.qrh.youshangdache.payment.service.impl;
 import com.alibaba.fastjson.JSON;
 
 import com.qrh.youshangdache.common.constant.MqConst;
+import com.qrh.youshangdache.common.constant.SystemConstant;
 import com.qrh.youshangdache.common.execption.GuiguException;
 import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import com.qrh.youshangdache.common.service.RabbitService;
@@ -12,6 +13,8 @@ import com.qrh.youshangdache.model.entity.payment.PaymentInfo;
 import com.qrh.youshangdache.model.enums.TradeType;
 import com.qrh.youshangdache.model.form.driver.TransferForm;
 import com.qrh.youshangdache.model.form.payment.PaymentInfoForm;
+import com.qrh.youshangdache.model.form.payment.ProfitsharingForm;
+import com.qrh.youshangdache.model.vo.order.OrderProfitsharingVo;
 import com.qrh.youshangdache.model.vo.order.OrderRewardVo;
 import com.qrh.youshangdache.model.vo.payment.WxPrepayVo;
 import com.qrh.youshangdache.order.client.OrderInfoFeignClient;
@@ -54,21 +57,29 @@ public class WxPayServiceImpl implements WxPayService {
     @Override
     @GlobalTransactional
     public void handlerOrder(String orderNo) {
-        //更新订单状态为已支付
-        orderInfoFeignClient.updateOrderPayStatus(orderNo).getData();
-        //获取系统奖励
+        orderInfoFeignClient.updateOrderPayStatus(orderNo);
+
+        //处理系统奖励，打入司机账户
         OrderRewardVo orderRewardVo = orderInfoFeignClient.getOrderRewardFee(orderNo).getData();
-        if (orderRewardVo != null && orderRewardVo.getRewardFee().doubleValue() > 0) {
+        if(null != orderRewardVo.getRewardFee() && orderRewardVo.getRewardFee().doubleValue() > 0) {
             TransferForm transferForm = new TransferForm();
             transferForm.setTradeNo(orderNo);
             transferForm.setTradeType(TradeType.REWARD.getType());
             transferForm.setContent(TradeType.REWARD.getContent());
             transferForm.setAmount(orderRewardVo.getRewardFee());
             transferForm.setDriverId(orderRewardVo.getDriverId());
-
-            driverAccountFeignClient.transfer(transferForm).getData();
+            driverAccountFeignClient.transfer(transferForm);
         }
 
+        //分账处理
+        OrderProfitsharingVo orderProfitsharingVo = orderInfoFeignClient.getOrderProfitsharing(orderRewardVo.getOrderId()).getData();
+        //封装分账参数对象
+        ProfitsharingForm profitsharingForm = new ProfitsharingForm();
+        profitsharingForm.setOrderNo(orderNo);
+        profitsharingForm.setAmount(orderProfitsharingVo.getDriverIncome());
+        profitsharingForm.setDriverId(orderRewardVo.getDriverId());
+        //分账有延迟，支付成功后最少2分钟执行分账申请
+        rabbitService.sendDelayMessage(MqConst.EXCHANGE_PROFITSHARING, MqConst.ROUTING_PROFITSHARING, JSON.toJSONString(profitsharingForm), SystemConstant.PROFITSHARING_DELAY_TIME);
 
     }
 
@@ -95,8 +106,8 @@ public class WxPayServiceImpl implements WxPayService {
         //1.回调通知的验签与解密
         String wechatPaySerial = request.getHeader("Wechatpay-Serial");
         String nonce = request.getHeader("Wechatpay-Nonce");
-        String timestamp = request.getHeader("Wechatpay-Timestamp");
         String signature = request.getHeader("Wechatpay-Signature");
+        String timestamp = request.getHeader("Wechatpay-Timestamp");
         String requestBody = RequestUtils.readData(request);
 
         //2.构造 RequestParam

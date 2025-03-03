@@ -48,8 +48,11 @@ public interface OrderInfoService extends IService<OrderInfo> {
     Boolean updateOrderPayStatus(String orderNo);
 
     OrderRewardVo getOrderRewardFee(String orderNo);
-
-    void orderCancel(Long parseLong);
+    /**
+     * 根据订单Id 取消订单
+     * @param orderId 订单id
+     */
+    void orderCancel(Long orderId);
 
     Boolean updateCouponAmount(Long orderId, BigDecimal couponAmount);
 
@@ -58,4 +61,8 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @param orderId 订单id
      */
     void systemCancelOrder(Long orderId);
+
+    void updateProfitsharingStatus(String orderNo);
+
+
 }
