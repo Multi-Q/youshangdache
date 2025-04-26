@@ -27,8 +27,8 @@ public class LoginAspect {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    @Around(value="execution(* com.qrh.youshangdache.*.controller.*.*(..)) && @annotation(login)")
-    public Object login(ProceedingJoinPoint proceedingJoinPoint,Login login) throws Throwable{
+    @Around(value = "execution(* com.qrh.youshangdache.*.controller.*.*(..)) && @annotation(login)")
+    public Object login(ProceedingJoinPoint proceedingJoinPoint, Login login) throws Throwable {
         //1 获取request对象
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes sra = (ServletRequestAttributes) attributes;
@@ -37,17 +37,20 @@ public class LoginAspect {
         //2 从请求头中获取token
         String token = request.getHeader("token");
         //3 判断token是否为空，如果为空，返回登录提示
-        if(!StringUtils.hasText(token)){
+        if (!StringUtils.hasText(token)) {
             throw new GuiguException(ResultCodeEnum.LOGIN_AUTH);
         }
         //4 token不为空，查询redis
         String customerId = stringRedisTemplate.opsForValue().get(RedisConstant.USER_LOGIN_KEY_PREFIX + token);
 
         //5 查询redis对应用户ID，把用户id放到threadlocal中
-        if(StringUtils.hasText(customerId)){
+        if (StringUtils.hasText(customerId)) {
             AuthContextHolder.setUserId(Long.parseLong(customerId));
         }
-
-        return proceedingJoinPoint.proceed();
+        try {
+            return proceedingJoinPoint.proceed();
+        } finally {
+            AuthContextHolder.removeUserId();
+        }
     }
 }

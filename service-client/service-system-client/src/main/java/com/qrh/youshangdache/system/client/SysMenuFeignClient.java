@@ -1,8 +1,8 @@
 package com.qrh.youshangdache.system.client;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.system.SysMenu;
-import com.atguigu.daijia.model.vo.system.AssginMenuVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.system.SysMenu;
+import com.qrh.youshangdache.model.vo.system.AssginMenuVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

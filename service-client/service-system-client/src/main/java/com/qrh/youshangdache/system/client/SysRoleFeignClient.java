@@ -1,10 +1,10 @@
 package com.qrh.youshangdache.system.client;
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.system.SysRole;
-import com.atguigu.daijia.model.query.system.SysRoleQuery;
-import com.atguigu.daijia.model.vo.base.PageVo;
-import com.atguigu.daijia.model.vo.system.AssginRoleVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.system.SysRole;
+import com.qrh.youshangdache.model.query.system.SysRoleQuery;
+import com.qrh.youshangdache.model.vo.base.PageVo;
+import com.qrh.youshangdache.model.vo.system.AssginRoleVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -1,10 +1,10 @@
 package com.qrh.youshangdache.system.client;
 
 
-import com.atguigu.daijia.common.result.Result;
-import com.atguigu.daijia.model.entity.system.SysUser;
-import com.atguigu.daijia.model.query.system.SysUserQuery;
-import com.atguigu.daijia.model.vo.base.PageVo;
+import com.qrh.youshangdache.common.result.Result;
+import com.qrh.youshangdache.model.entity.system.SysUser;
+import com.qrh.youshangdache.model.query.system.SysUserQuery;
+import com.qrh.youshangdache.model.vo.base.PageVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
