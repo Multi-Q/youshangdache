@@ -36,6 +36,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
 
     /**
      * 获取用户的openId
+     *
      * @param customerId 用户id
      * @return 用户的openId
      */
@@ -47,10 +48,11 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
     }
 
     /**
-     * 更新用户手机号
+     * 绑定用户手机号
+     * <p>登录后检查该用户是否绑定手机号，没有绑定，则提示并要求用户绑定手机号</p>
      *
-     * @param updateWxPhoneForm 更新用户手机号表单
-     * @return 是否更新成功
+     * @param updateWxPhoneForm
+     * @return true绑定 | false未绑定
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
@@ -79,8 +81,10 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
     /**
      * 获取用户信息
      *
+     * <p>乘客登录成功，小程序会回调“获取客户登录信息”接口，获取当前乘客基本信息</p>
+     *
      * @param customerId 用户id
-     * @return 用户的登录信息
+     * @return 用户登录后的基本信息
      */
     @Override
     public CustomerLoginVo getCustomerInfo(Long customerId) {
@@ -101,9 +105,10 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
     }
 
     /**
-     * 登录
+     * 小程序登录接口-用户端
+     * <p>用户第一次登录，则登录并注册，返回用户id；否则直接返回用户ID</p>
      *
-     * @param code
+     * @param code 微信颁发的授权码
      * @return 用户id
      */
     @Override
@@ -118,9 +123,8 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
             e.printStackTrace();
         }
         //2根据openid查询数据库表，判断是否是第一次登录
-        LambdaQueryWrapper<CustomerInfo> queryWrapper = new LambdaQueryWrapper<CustomerInfo>()
-                .eq(StringUtils.isNotBlank(openid), CustomerInfo::getWxOpenId, openid);
-        CustomerInfo customerInfo = customerInfoMapper.selectOne(queryWrapper);
+        CustomerInfo customerInfo = customerInfoMapper.selectOne(new LambdaQueryWrapper<CustomerInfo>()
+                .eq(StringUtils.isNotBlank(openid), CustomerInfo::getWxOpenId, openid));
 
         //3第一次登录，添加到数据库
         if (customerInfo == null) {

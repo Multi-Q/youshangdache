@@ -22,13 +22,21 @@ public class DriverInfoController {
 
     @Resource
     private DriverInfoService driverInfoService;
-
+    /**
+     * 司机端-小程序授权登录
+     * @param code 微信临时票据
+     * @return 用户id
+     */
     @Operation(summary = "小程序授权登录")
     @GetMapping(value = "/login/{code}")
     public Result<Long> login(@PathVariable String code) {
         return Result.ok(driverInfoService.login(code));
     }
-
+    /**
+     * 司机端-获取登录后的司机信息
+     * @param driverId 司机id
+     * @return 司机登录后的司机基本信息
+     */
     @Operation(summary = "获取登录后的司机信息")
     @GetMapping(value = "/getDriverLoginInfo/{driverId}")
     public Result<DriverLoginVo> getDriverLoginInfo(@PathVariable Long driverId) {
@@ -53,9 +61,14 @@ public class DriverInfoController {
         return Result.ok(driverInfoService.creatDriverFaceModel(driverFaceModelForm));
     }
 
-    @Operation(summary = "获取司机位置")
+    /**
+     * 获取司机设置信息
+     * @param driverId 司机id
+     * @return 司机的设置信息
+     */
+    @Operation(summary = "获取司机设置信息")
     @PostMapping("/getDriverSet/{driverId}")
-    public Result<DriverSet> getDriverSet(@PathVariable Long driverId) {
+    public Result<DriverSet> getDriverSettingInfo(@PathVariable Long driverId) {
         return Result.ok(driverInfoService.getDriverSet(driverId));
     }
 

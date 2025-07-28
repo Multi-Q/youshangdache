@@ -67,6 +67,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 修改分账信息的状态
+     *
      * @param orderNo 订单编号
      */
     @Transactional(rollbackFor = Exception.class)
@@ -83,6 +84,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         updateOrderProfitsharing.setStatus(2);
         orderProfitsharingMapper.update(updateOrderProfitsharing, updateQueryWrapper);
     }
+
     /**
      * 系统取消订单
      *
@@ -207,8 +209,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 获取司机订单分页列表
+     *
      * @param pageParam
-     * @param driverId 司机id
+     * @param driverId  司机id
      * @return 分页数据
      */
     @Override
@@ -220,7 +223,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     /**
      * 获取乘客订单分页列表
-     * @param pageParam 分页参数
+     *
+     * @param pageParam  分页参数
      * @param customerId 客户id
      * @return 分页数据
      */
@@ -261,7 +265,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderBill.setOrderId(updateOrderBillForm.getOrderId());
                 orderBill.setPayAmount(updateOrderBillForm.getTotalAmount());
                 orderBillMapper.insert(orderBill);
-            },threadPoolExecutor);
+            }, threadPoolExecutor);
 
             CompletableFuture<Void> orderProfitsharingCF = CompletableFuture.runAsync(() -> {
                 OrderProfitsharing orderProfitsharing = new OrderProfitsharing();
@@ -272,7 +276,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderProfitsharing.setStatus(1);
 
                 orderProfitsharingMapper.insert(orderProfitsharing);
-            },threadPoolExecutor);
+            }, threadPoolExecutor);
 
             try {
                 CompletableFuture.allOf(orderBillCF, orderProfitsharingCF).get();
@@ -490,10 +494,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     /**
-     * 获取订单状态
-     *
+     * 乘客下完单后，订单状态为1，乘客端小程序会轮询订单状态，当订单状态为2时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
      * @param orderId 订单id
-     * @return 订单状态
+     * @return 订单状态代号
      */
     @Override
     public Integer getOrderStatus(Long orderId) {
@@ -511,8 +514,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     /**
      * 保存订单信息
      *
-     * @param orderInfoForm
-     * @return
+     * @param orderInfoForm 订单信息对象
+     * @return 订单id
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
@@ -530,20 +533,25 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //接单标识，标识不存在了说明不在等待接单状态了
         stringRedisTemplate.opsForValue()
                 .set(RedisConstant.ORDER_ACCEPT_MARK,
-                        "0",
+                        OrderStatus.ACCEPTED.getStatus().toString(),
                         RedisConstant.ORDER_ACCEPT_MARK_EXPIRES_TIME,
                         TimeUnit.MINUTES);
 
         //发送延迟消息，取消订单
         rabbitService.sendDelayMessage(MqConst.EXCHANGE_CANCEL_ORDER,
                 MqConst.ROUTING_CANCEL_ORDER,
-                String.valueOf(orderInfo.getId()),
+                orderInfo.getId().toString(),
                 SystemConstant.CANCEL_ORDER_DELAY_TIME);
         return orderInfo.getId();
     }
 
     /**
      * 生成延迟订单,用redisson实现
+     *
+     * <p>
+     * 使用redisson的延迟队列实现延迟订单发送。
+     * 创建延迟队列，并设置延迟队列的过期时间（15min）
+     * </p>
      *
      * @param orderId 订单id
      */

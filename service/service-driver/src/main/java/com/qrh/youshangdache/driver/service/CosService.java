@@ -6,9 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 public interface CosService {
 
     /**
-     * 文件上传
-     * @param file 上传的文件
-     * @param path 文件存储路劲
+     * 上传证件照到腾讯云私有存储桶， 得有对应的权限才能申请临时访问url
+     * @param file 身份证图片
+     * @param path
      * @return
      */
     CosUploadVo upload(MultipartFile file, String path);

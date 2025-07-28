@@ -33,11 +33,11 @@ public class DriverInfo extends BaseEntity {
 	private String phone;
 
     @Schema(description = "姓名")
-	@TableField("name")
+	@TableField("`name`")
 	private String name;
 
     @Schema(description = "性别")
-	@TableField("gender")
+	@TableField("`gender`")
 	private String gender;
 
     @Schema(description = "生日")
@@ -121,7 +121,7 @@ public class DriverInfo extends BaseEntity {
 	private Integer orderCount;
 
 	@Schema(description = "评分")
-	@TableField("score")
+	@TableField("`score`")
 	private BigDecimal score;
 
     @Schema(description = "认证状态")
@@ -129,7 +129,7 @@ public class DriverInfo extends BaseEntity {
 	private Integer authStatus;
 
     @Schema(description = "状态，1正常，2禁用")
-	@TableField("status")
+	@TableField("`status`")
 	private Integer status;
 
 }

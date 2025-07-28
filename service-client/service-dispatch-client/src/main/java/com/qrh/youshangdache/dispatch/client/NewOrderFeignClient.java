@@ -14,6 +14,11 @@ import java.util.List;
 @FeignClient(value = "service-dispatch")
 public interface NewOrderFeignClient {
 
+    /**
+     * 将任务添加到任务队列中并启动任务
+     * @param newOrderDispatchVo 创建订单任务对象
+     * @return 任务调度id
+     */
     @PostMapping("/dispatch/newOrder/addAndStartTask")
     Result<Long> addAndStartTask(@RequestBody NewOrderTaskVo newOrderDispatchVo);
 

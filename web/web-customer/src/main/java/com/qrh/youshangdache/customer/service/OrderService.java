@@ -18,9 +18,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 public interface OrderService {
 
     ExpectOrderVo expectOrder(ExpectOrderForm expectOrderForm);
-
+    /**
+     * 乘客提交打车订单
+     * @param submitOrderForm 订单信息对象
+     * @return 订单号
+     */
     Long submitOrder(SubmitOrderForm submitOrderForm);
-
+    /**
+     * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     * @param orderId 订单id
+     * @return 订单状态代号
+     */
     Integer getOrderStatus(Long orderId);
     OrderInfoVo getOrderInfoByOrderId(Long orderId, Long customerId);
 

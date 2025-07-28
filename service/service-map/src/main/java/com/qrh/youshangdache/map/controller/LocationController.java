@@ -28,32 +28,52 @@ public class LocationController {
     @Resource
     private LocationService locationService;
 
+    /**
+     * 开启接单服务：更新司机经纬度位置
+     *
+     * @param updateDriverLocationForm 更新司机位置对象
+     * @return true
+     */
     @Operation(summary = "开启接单服务：更新司机经纬度位置")
     @PostMapping("/updateDriverLocation")
     public Result<Boolean> updateDriverLocation(@RequestBody UpdateDriverLocationForm updateDriverLocationForm) {
         return Result.ok(locationService.updateDriverLocation(updateDriverLocationForm));
     }
 
+    /**
+     * 关闭接单服务：删除司机经纬度位置
+     *
+     * @param driverId 司机id
+     * @return true
+     */
     @Operation(summary = "关闭接单服务：删除司机经纬度位置")
     @DeleteMapping("/removeDriverLocation/{driverId}")
     public Result<Boolean> removeDriverLocation(@PathVariable Long driverId) {
         return Result.ok(locationService.removeDriverLocation(driverId));
     }
 
+    /**
+     * 司机端的小程序开启接单服务后，开始实时上传司机的定位信息到redis的GEO缓存，
+     * 前面乘客已经下单，现在我们就要查找附近适合接单的司机，如果有对应的司机，那就给司机发送新订单消息。
+     *
+     * @param searchNearByDriverForm 附近司机
+     * @return 附近司机集合
+     */
     @Operation(summary = "搜索附近满足条件的司机")
     @PostMapping("/searchNearByDriver")
     public Result<List<NearByDriverVo>> searchNearByDriver(@RequestBody SearchNearByDriverForm searchNearByDriverForm) {
         return Result.ok(locationService.searchNearByDriver(searchNearByDriverForm));
     }
+
     @Operation(summary = "司机赶往代驾起始点，更新订单地址到缓存")
     @PostMapping("/updateOrderLocationToCache")
-    public Result<Boolean> updateOrderLocationToCache(@RequestBody UpdateOrderLocationForm  updateOrderLocationForm) {
+    public Result<Boolean> updateOrderLocationToCache(@RequestBody UpdateOrderLocationForm updateOrderLocationForm) {
         return Result.ok(locationService.updateOrderLocationToCache(updateOrderLocationForm));
     }
 
     @Operation(summary = "司机赶往代驾起始点，更新订单经纬度位置")
     @GetMapping("/getCacheOrderLocation/{orderId}")
-    public Result<OrderLocationVo> getCacheOrderLocation(@PathVariable Long  orderId) {
+    public Result<OrderLocationVo> getCacheOrderLocation(@PathVariable Long orderId) {
         return Result.ok(locationService.getCacheOrderLocation(orderId));
     }
 

@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(value = "service-map")
 public interface MapFeignClient {
-
+    /**
+     * 计算驾驶路线
+     *
+     * @param calculateDrivingLineForm
+     * @return
+     */
     @PostMapping("/map/calculateDrivingLine")
     Result<DrivingLineVo> calculateDrivingLine(@RequestBody CalculateDrivingLineForm calculateDrivingLineForm);
 }

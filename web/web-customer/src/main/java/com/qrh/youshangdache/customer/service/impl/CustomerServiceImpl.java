@@ -34,9 +34,10 @@ public class CustomerServiceImpl implements CustomerService {
     private OrderInfoFeignClient orderInfoFeignClient;
 
     /**
-     * 查找该用户当前订单
-     * @param customerId
-     * @return
+     * 乘客如果已经下过单了，而且这个订单在执行中，没有结束，
+     * 那么乘客是不可以再下单的，页面会弹出层，进入执行中的订单。
+     * @param customerId 用户id
+     * @return 当前用户正在进行的订单信息
      */
     @Override
     public CurrentOrderInfoVo searchCustomerCurrentOrder(Long customerId) {
@@ -44,9 +45,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * 更新用户手机号码
+     * 绑定用户手机号
+     * <p>登录后检查该用户是否绑定手机号，没有绑定，则提示并要求用户绑定手机号</p>
+     *
      * @param updateWxPhoneForm
-     * @return
+     * @return true绑定 | false未绑定
      */
     @Override
     public Boolean updateWxPhoneNumber(UpdateWxPhoneForm updateWxPhoneForm) {
@@ -55,8 +58,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * 获取用户的登录信息
+     *
      * @param customerId 用户id
-     * @return
+     * @return 用户登录后的相关数据
      */
     @Override
     public CustomerLoginVo getCustomerLoginInfo(Long customerId) {
@@ -64,9 +68,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * 登录
-     * @param code
-     * @return
+     * 小程序登录接口-用户端
+     *
+     * <p>服务端通过随机生成的UUID作为用户的token，并以"redis前缀+token"作为redis key存储在redis中</p>
+     *
+     * @param code 微信颁发的授权码
+     * @return token
      */
     @Override
     public String login(String code) {

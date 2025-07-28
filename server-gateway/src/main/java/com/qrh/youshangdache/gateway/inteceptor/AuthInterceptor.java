@@ -23,14 +23,18 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
+        //token为空，说明未登录
         if (!StringUtils.hasText(token)) {
             response.setStatus(ResultCodeEnum.LOGIN_AUTH.getCode());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(
-                    """
-                       {"code": %d, "message": "%s"}
-                    """.formatted(ResultCodeEnum.LOGIN_AUTH.getCode(), ResultCodeEnum.LOGIN_AUTH.getMessage())
-            );
+            response.getWriter()
+                    .write(
+                            String.format("{\"code\": %d, \"message\": \"%s\"}",
+                                    ResultCodeEnum.LOGIN_AUTH.getCode(),
+                                    ResultCodeEnum.LOGIN_AUTH.getMessage()
+                            )
+
+                    );
             return false;
         }
         //4 token不为空，查询redis
@@ -48,6 +52,16 @@ public class AuthInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
     }
 
+    /**
+     * 请求彻底结束后，清除threadLocal
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * @param handler the handler (or {@link HandlerMethod}) that started asynchronous
+     * execution, for type and/or instance examination
+     * @param ex any exception thrown on handler execution, if any; this does not
+     * include exceptions that have been handled through an exception resolver
+     * @throws Exception
+     */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         AuthContextHolder.removeUserId();

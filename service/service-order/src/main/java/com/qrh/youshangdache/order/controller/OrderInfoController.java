@@ -25,12 +25,22 @@ public class OrderInfoController {
     @Resource
     private OrderInfoService orderInfoService;
 
+    /**
+     * 保存订单信息
+     * @param orderInfoForm 订单信息对象
+     * @return 订单id
+     */
     @Operation(summary = "保存订单信息")
     @PostMapping("/saveOrderInfo")
     public Result<Long> saveOrderInfo(@RequestBody OrderInfoForm orderInfoForm) {
         return Result.ok(orderInfoService.saveOrderInfo(orderInfoForm));
     }
 
+    /**
+     * 乘客下完单后，订单状态为1，乘客端小程序会轮询订单状态，当订单状态为2时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     * @param orderId 订单id
+     * @return 订单状态代号
+     */
     @Operation(summary = "根据订单id获取订单状态")
     @GetMapping("/getOrderStatus/{orderId}")
     public Result<Integer> getOrderStatus(@PathVariable Long orderId) {
@@ -42,7 +52,12 @@ public class OrderInfoController {
     public Result<Boolean> robNewOrder(@PathVariable Long driverId, @PathVariable Long orderId) {
         return Result.ok(orderInfoService.robNewOrder(driverId, orderId));
     }
-
+    /**
+     * 乘客如果已经下过单了，而且这个订单在执行中，没有结束，
+     * 那么乘客是不可以再下单的，页面会弹出层，进入执行中的订单。
+     * @param customerId 用户id
+     * @return 当前用户正在进行的订单信息
+     */
     @Operation(summary = "乘客端查找当前订单")
     @GetMapping("/searchCustomerCurrentOrder/{customerId}")
     public Result<CurrentOrderInfoVo> searchCustomerCurrentOrder(@PathVariable Long customerId) {

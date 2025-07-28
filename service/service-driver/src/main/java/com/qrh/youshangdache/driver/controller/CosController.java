@@ -18,6 +18,12 @@ public class CosController {
     @Resource
     private CosService cosService;
 
+    /**
+     * 上传证件照到腾讯云私有存储桶， 得有对应的权限才能申请临时访问url
+     * @param file
+     * @param path
+     * @return
+     */
     @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
    public Result<CosUploadVo> upload(@RequestPart MultipartFile file,
                                @RequestParam(name="path",defaultValue = "auth")String path){

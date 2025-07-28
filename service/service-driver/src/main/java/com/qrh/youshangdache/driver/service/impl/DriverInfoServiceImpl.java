@@ -7,7 +7,6 @@ import com.qrh.youshangdache.common.execption.GuiguException;
 import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import com.qrh.youshangdache.driver.config.TencentCloudProperties;
 import com.qrh.youshangdache.driver.mapper.*;
-import com.qrh.youshangdache.driver.mapper.*;
 import com.qrh.youshangdache.driver.service.CosService;
 import com.qrh.youshangdache.driver.service.DriverInfoService;
 import com.qrh.youshangdache.model.entity.driver.*;
@@ -161,9 +160,9 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     }
 
     /**
-     * 获取司机设置
-     * @param driverId
-     * @return
+     * 获取司机设置信息
+     * @param driverId 司机id
+     * @return 司机的设置信息
      */
     @Override
     public DriverSet getDriverSet(Long driverId) {
@@ -247,10 +246,9 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     }
 
     /**
-     * 获取登录后的司机信息
-     *
+     * 司机端-获取登录后的司机信息
      * @param driverId 司机id
-     * @return 登录后的司机信息
+     * @return 司机登录后的司机基本信息
      */
     @Override
     public DriverLoginVo getDriverLoginInfo(Long driverId) {
@@ -268,10 +266,9 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     }
 
     /**
-     * 登录
-     *
-     * @param code 微信发过来的临时票据
-     * @return 司机id
+     * 司机端-小程序授权登录
+     * @param code 微信临时票据
+     * @return 用户id
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
@@ -279,10 +276,10 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         try {
             //根据code+小程序id+秘钥请求微信接口，返回openid
             WxMaJscode2SessionResult sessionInfo = wxMaService.getUserService().getSessionInfo(code);
-            String openid = sessionInfo.getOpenid();
+            String openId = sessionInfo.getOpenid();
             //根据openid查询是否第一次登录
             LambdaQueryWrapper<DriverInfo> queryWrapper = new LambdaQueryWrapper<DriverInfo>()
-                    .eq(StringUtils.hasText(openid), DriverInfo::getWxOpenId, openid);
+                    .eq(StringUtils.hasText(openId), DriverInfo::getWxOpenId, openId);
             DriverInfo driverInfo = driverInfoMapper.selectOne(queryWrapper);
             //如果是第一次登录，driverInfo应该为null
             if (driverInfo == null) {
@@ -290,7 +287,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
                 driverInfo = new DriverInfo();
                 driverInfo.setNickname("用户" + System.currentTimeMillis());
                 driverInfo.setAvatarUrl("https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg");
-                driverInfo.setWxOpenId(openid);
+                driverInfo.setWxOpenId(openId);
                 driverInfoMapper.insert(driverInfo);
                 //初始化司机配置
                 DriverSet driverSet = new DriverSet();

@@ -20,13 +20,31 @@ import java.math.BigDecimal;
 
 @FeignClient(value = "service-order")
 public interface OrderInfoFeignClient {
-
+    /**
+     * 保存订单信息
+     *
+     * @param orderInfoForm 订单信息对象
+     * @return 订单id
+     */
     @PostMapping("/order/info/saveOrderInfo")
     Result<Long> saveOrderInfo(@RequestBody OrderInfoForm orderInfoForm);
 
+    /**
+     * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     *
+     * @param orderId 订单id
+     * @return 订单状态代号
+     */
     @GetMapping("/order/info/getOrderStatus/{orderId}")
     Result<Integer> getOrderStatus(@PathVariable("orderId") Long orderId);
 
+    /**
+     * 乘客如果已经下过单了，而且这个订单在执行中，没有结束，
+     * 那么乘客是不可以再下单的，页面会弹出层，进入执行中的订单。
+     *
+     * @param customerId 用户id
+     * @return 当前用户正在进行的订单信息
+     */
     @GetMapping("/order/info/searchCustomerCurrentOrder/{customerId}")
     public Result<CurrentOrderInfoVo> searchCustomerCurrentOrder(@PathVariable Long customerId);
 

@@ -19,7 +19,12 @@ public class CosController {
     @Resource
     private CosService cosService;
 
-
+    /**
+     * 上传证件照到腾讯云私有存储桶， 得有对应的权限才能申请临时访问url
+     * @param file 身份证图片
+     * @param path
+     * @return 图片存储路径及回显地址
+     */
     @Operation(summary = "文件上传")
     @Login
     @PostMapping("/upload")

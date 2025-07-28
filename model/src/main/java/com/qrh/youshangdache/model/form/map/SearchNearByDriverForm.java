@@ -7,13 +7,19 @@ import java.math.BigDecimal;
 
 @Data
 public class SearchNearByDriverForm {
-
+    /**
+     * 经度
+     */
     @Schema(description = "经度")
     private BigDecimal longitude;
-
-    @Schema(description = "伟度")
+    /**
+     * 纬度
+     */
+    @Schema(description = "纬度")
     private BigDecimal latitude;
-
+    /**
+     * 里程
+     */
     @Schema(description = "里程")
     private BigDecimal mileageDistance;
 }

@@ -170,7 +170,11 @@ public class OrderServiceImpl implements OrderService {
         orderInfoVo.setOrderBillVo(orderBillVo);
         return orderInfoVo;
     }
-
+    /**
+     * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     * @param orderId 订单id
+     * @return 订单状态代号
+     */
     @Override
     public Integer getOrderStatus(Long orderId) {
         return orderInfoFeignClient.getOrderStatus(orderId).getData();
@@ -178,6 +182,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 预估订单费用
+     *
      * @param expectOrderForm
      * @return
      */
@@ -203,9 +208,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * 提交订单
-     * @param submitOrderForm
-     * @return
+     * 乘客提交打车订单
+     *
+     * @param submitOrderForm 订单信息对象
+     * @return 订单id
      */
     @Override
     public Long submitOrder(SubmitOrderForm submitOrderForm) {
@@ -233,19 +239,19 @@ public class OrderServiceImpl implements OrderService {
         Long orderId = orderInfoFeignClient.saveOrderInfo(orderInfoForm).getData();
 
         //   启动任务调度
-        NewOrderTaskVo newOrderTaskVo = new NewOrderTaskVo();
-        newOrderTaskVo.setOrderId(orderId);
-        newOrderTaskVo.setStartLocation(orderInfoForm.getStartLocation());
-        newOrderTaskVo.setStartPointLongitude(orderInfoForm.getEndPointLongitude());
-        newOrderTaskVo.setStartPointLatitude(orderInfoForm.getStartPointLatitude());
-        newOrderTaskVo.setEndLocation(orderInfoForm.getEndLocation());
-        newOrderTaskVo.setEndPointLongitude(orderInfoForm.getEndPointLongitude());
-        newOrderTaskVo.setEndPointLatitude(orderInfoForm.getEndPointLatitude());
-        newOrderTaskVo.setExpectAmount(orderInfoForm.getExpectAmount());
-        newOrderTaskVo.setExpectDistance(orderInfoForm.getExpectDistance());
-        newOrderTaskVo.setExpectTime(drivingLineVo.getDuration());
-        newOrderTaskVo.setFavourFee(orderInfoForm.getFavourFee());
-        newOrderTaskVo.setCreateTime(new Date());
+        NewOrderTaskVo newOrderTaskVo = NewOrderTaskVo.builder()
+                .orderId(orderId)
+                .startLocation(orderInfoForm.getStartLocation())
+                .startPointLongitude(orderInfoForm.getEndPointLongitude())
+                .startPointLatitude(orderInfoForm.getStartPointLatitude())
+                .endLocation(orderInfoForm.getEndLocation())
+                .endPointLongitude(orderInfoForm.getEndPointLongitude())
+                .endPointLatitude(orderInfoForm.getEndPointLatitude())
+                .expectAmount(orderInfoForm.getExpectAmount())
+                .expectDistance(orderInfoForm.getExpectDistance())
+                .expectTime(drivingLineVo.getDuration())
+                .favourFee(orderInfoForm.getFavourFee())
+                .createTime(new Date()).build();
 
         Long jobId = newOrderFeignClient.addAndStartTask(newOrderTaskVo).getData();
 

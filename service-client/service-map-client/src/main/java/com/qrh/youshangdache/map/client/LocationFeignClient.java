@@ -16,13 +16,40 @@ import java.util.List;
 
 @FeignClient(value = "service-map")
 public interface LocationFeignClient {
+    /**
+     * 开启接单服务：更新司机经纬度位置
+     *
+     * <p>
+     * 将司机的定位坐标存储在redis中<br>
+     * 乘客下单后寻找5公里范围内开启接单服务的司机，通过Redis GEO进行计算
+     * </p>
+     *
+     * @param updateDriverLocationForm 更新司机位置对象
+     * @return true
+     */
     @PostMapping("/map/location/updateDriverLocation")
     Result<Boolean> updateDriverLocation(@RequestBody UpdateDriverLocationForm updateDriverLocationForm);
 
-
+    /**
+     * 接单结束，关闭接单服务：删除司机经纬度位置
+     *
+     * <p>
+     * 将司机的定位坐标从redis中删除
+     * </p>
+     *
+     * @param driverId 司机id
+     * @return true
+     */
     @DeleteMapping("/map/location/removeDriverLocation/{driverId}")
     Result<Boolean> removeDriverLocation(@PathVariable("driverId") Long driverId);
 
+    /**
+     * 司机端的小程序开启接单服务后，开始实时上传司机的定位信息到redis的GEO缓存，
+     * 前面乘客已经下单，现在我们就要查找附近适合接单的司机，如果有对应的司机，那就给司机发送新订单消息。
+     *
+     * @param searchNearByDriverForm 附近司机
+     * @return 附近司机集合
+     */
     @DeleteMapping("/map/location/searchNearByDriver")
     public Result<List<NearByDriverVo>> searchNearByDriver(@RequestBody SearchNearByDriverForm searchNearByDriverForm);
 

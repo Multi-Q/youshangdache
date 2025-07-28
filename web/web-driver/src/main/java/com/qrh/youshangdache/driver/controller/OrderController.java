@@ -33,7 +33,11 @@ public class OrderController {
 
     @Resource
     private OrderService orderService;
-
+    /**
+     * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     * @param orderId 订单id
+     * @return 订单状态代号
+     */
     @Operation(summary = "查询订单状态")
     @Login
     @GetMapping("/getOrderStatus/{orderId}")

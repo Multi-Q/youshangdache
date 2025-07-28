@@ -15,8 +15,15 @@ public class CosServiceImpl implements CosService {
     @Resource
     private CosFeignClient cosFeignClient;
 
+    /**
+     * 上传证件照到腾讯云私有存储桶， 得有对应的权限才能申请临时访问url
+     *
+     * @param file 身份证图片
+     * @param path
+     * @return
+     */
     @Override
-    public CosUploadVo uploadFile(MultipartFile file,String path) {
-        return cosFeignClient.upload(file,path).getData();
+    public CosUploadVo uploadFile(MultipartFile file, String path) {
+        return cosFeignClient.upload(file, path).getData();
     }
 }

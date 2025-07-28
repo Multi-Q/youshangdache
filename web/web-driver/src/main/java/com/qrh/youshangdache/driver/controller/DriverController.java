@@ -22,12 +22,23 @@ public class DriverController {
     @Resource
     private DriverService driverService;
 
+    /**
+     * 司机端-小程序授权登录
+     *
+     * @param code 微信临时票据
+     * @return token
+     */
     @Operation(summary = "司机端-小程序授权登录")
     @GetMapping(value = "/login/{code}")
     public Result<String> login(@PathVariable String code) {
         return Result.ok(driverService.login(code));
     }
 
+    /**
+     * 司机端-获取登录后的司机信息
+     *
+     * @return 司机登录后的司机基本信息
+     */
     @Operation(summary = "司机端-获取登录后的司机信息")
     @GetMapping(value = "/getDriverLoginInfo")
     @Login

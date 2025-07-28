@@ -1,6 +1,7 @@
 package com.qrh.youshangdache.map.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.qrh.youshangdache.common.constant.OrderDistanceConstant;
 import com.qrh.youshangdache.common.constant.RedisConstant;
 import com.qrh.youshangdache.common.constant.SystemConstant;
 import com.qrh.youshangdache.common.result.Result;
@@ -60,6 +61,7 @@ public class LocationServiceImpl implements LocationService {
 
     /**
      * 计算订单真实距离
+     *
      * @param orderId 订单id
      * @return
      */
@@ -94,6 +96,7 @@ public class LocationServiceImpl implements LocationService {
 
     /**
      * 司机开始代驾后，乘客端要获取司机的动向，就必须定时获取上面更新的最后一个位置信息。
+     *
      * @param orderId 订单id
      * @return 最后一个位置信息
      */
@@ -112,6 +115,7 @@ public class LocationServiceImpl implements LocationService {
 
     /**
      * 司机开始代驾后，为了减少请求次数，司机端会实时收集变更的GPS定位信息，定时批量上传到后台服务器。
+     *
      * @param orderServiceLocationForms
      * @return
      */
@@ -159,14 +163,18 @@ public class LocationServiceImpl implements LocationService {
         return true;
     }
 
+    /**
+     * 司机端的小程序开启接单服务后，开始实时上传司机的定位信息到redis的GEO缓存，
+     * 前面乘客已经下单，现在我们就要查找附近适合接单的司机，如果有对应的司机，那就给司机发送新订单消息。
+     *
+     * @param searchNearByDriverForm 附近司机
+     * @return 附近司机集合
+     */
     @Override
     public List<NearByDriverVo> searchNearByDriver(SearchNearByDriverForm searchNearByDriverForm) {
         //搜索经纬度中5公里以内的司机
         Circle circle = new Circle(
-                new Point(
-                        searchNearByDriverForm.getLatitude().doubleValue(),
-                        searchNearByDriverForm.getLongitude().doubleValue()
-                ),
+                new Point(searchNearByDriverForm.getLatitude().doubleValue(), searchNearByDriverForm.getLongitude().doubleValue()),
                 new Distance(SystemConstant.NEARBY_DRIVER_RADIUS, RedisGeoCommands.DistanceUnit.KILOMETERS)
         );
         RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
@@ -188,14 +196,14 @@ public class LocationServiceImpl implements LocationService {
                 BigDecimal currentDistance = new BigDecimal(item.getDistance().getValue()).setScale(2, RoundingMode.HALF_UP);
 
                 //获取司机接单设置参数
-                DriverSet driverSet = driverInfoFeignClient.getDriverSet(driverId).getData();
+                DriverSet driverSet = driverInfoFeignClient.getDriverSettingInfo(driverId).getData();
                 //接单里程判断，acceptDistance==0：不限制，
                 if (driverSet.getAcceptDistance().doubleValue() != 0 &&
                         driverSet.getAcceptDistance().subtract(currentDistance).doubleValue() < 0) {
                     continue;
                 }
                 //订单里程判断，orderDistance==0：不限制
-                if (driverSet.getOrderDistance().doubleValue() != 0 &&
+                if (driverSet.getOrderDistance().doubleValue() != OrderDistanceConstant.ORDER_DISTANCE_NO_LIMIT &&
                         driverSet.getOrderDistance()
                                 .subtract(searchNearByDriverForm.getMileageDistance())
                                 .doubleValue() < 0) {
@@ -213,10 +221,15 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * 实时更新司机位置
+     * 开启接单服务：更新司机经纬度位置
      *
-     * @param updateDriverLocationForm
-     * @return
+     * <p>
+     * 将司机的定位坐标存储在redis中<br>
+     * 乘客下单后寻找5公里范围内开启接单服务的司机，通过Redis GEO进行计算
+     * </p>
+     *
+     * @param updateDriverLocationForm 更新司机位置对象
+     * @return true
      */
     @Override
     public Boolean updateDriverLocation(UpdateDriverLocationForm updateDriverLocationForm) {
@@ -228,10 +241,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * 接单完成，删除司机位置
+     * 接单结束，关闭接单服务：删除司机经纬度位置
+     *
+     * <p>
+     * 将司机的定位坐标从redis中删除
+     * </p>
      *
      * @param driverId 司机id
-     * @return
+     * @return true
      */
     @Override
     public Boolean removeDriverLocation(Long driverId) {

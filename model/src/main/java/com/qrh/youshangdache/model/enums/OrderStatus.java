@@ -15,11 +15,15 @@ public enum OrderStatus {
     PAID(8, "已付款"),
     FINISH(9, "完成"),
     CANCEL_ORDER(-1, "未接单取消订单"),
-    NULL_ORDER(-100, "不存在")
-    ;
-
+    NULL_ORDER(-100, "不存在");
+    /**
+     * 订单状态
+     */
     @EnumValue
     private final Integer status;
+    /**
+     * 订单状态描述
+     */
     private final String comment;
 
     OrderStatus(Integer status, String comment) {

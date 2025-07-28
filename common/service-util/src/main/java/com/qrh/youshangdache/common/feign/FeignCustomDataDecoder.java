@@ -26,10 +26,10 @@ public class FeignCustomDataDecoder implements Decoder {
         if (null == object) {
             throw new DecodeException(ResultCodeEnum.FEIGN_FAIL.getCode(), ResultCodeEnum.FEIGN_FAIL.getMessage(), response.request());//"数据解析失败"
         }
-        if(object instanceof Result<?> result) {
+        if (object instanceof Result<?> result) {
             //返回状态!=200，直接抛出异常，全局异常捕获异常，接口提示
-            if (result.getCode().intValue() != ResultCodeEnum.SUCCESS.getCode().intValue()) {
-                throw new DecodeException(result.getCode(), result.getMessage(), response.request());//"数据解析失败"
+            if (result.getCode().equals(ResultCodeEnum.SUCCESS.getCode())) {
+                throw new DecodeException(result.getCode(), result.getMessage(), response.request());
             }
             //远程调用必须有返回值，具体调用中不用判断result.getData() == null，这里统一处理
             if (null == result.getData()) {

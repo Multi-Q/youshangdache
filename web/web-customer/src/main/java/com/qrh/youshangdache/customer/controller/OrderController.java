@@ -50,6 +50,11 @@ public class OrderController {
         return Result.ok(orderService.expectOrder(expectOrderForm));
     }
 
+    /**
+     * 乘客提交打车订单
+     * @param submitOrderForm 订单信息对象
+     * @return 订单号
+     */
     @Operation(summary = "乘客下单")
     @Login
     @PostMapping("/submitOrder")
@@ -57,7 +62,11 @@ public class OrderController {
         submitOrderForm.setCustomerId(AuthContextHolder.getUserId());
         return Result.ok(orderService.submitOrder(submitOrderForm));
     }
-
+    /**
+     * 乘客下完单后，订单状态为1，乘客端小程序会轮询订单状态，当订单状态为2时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     * @param orderId 订单id
+     * @return 订单状态代号
+     */
     @Operation(summary = "查询订单状态")
     @Login
     @GetMapping("/getOrderStatus/{orderId}")

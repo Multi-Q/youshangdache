@@ -30,6 +30,7 @@ public class MapServiceImpl implements MapService {
 
     /**
      * 计算驾驶路线
+     *
      * @param calculateDrivingLineForm
      * @return
      */
@@ -50,10 +51,15 @@ public class MapServiceImpl implements MapService {
             throw new GuiguException(ResultCodeEnum.MAP_FAIL);
         }
         //返回获取路线信息
-        JSONObject route = result.getJSONObject("result").getJSONArray("routes").getJSONObject(0);
+        JSONObject route = result.getJSONObject("result")
+                .getJSONArray("routes")
+                .getJSONObject(0);
         DrivingLineVo drivingLineVo = new DrivingLineVo();
         drivingLineVo.setDuration(route.getBigDecimal("duration"));
-        drivingLineVo.setDistance(route.getBigDecimal("distance").divide(new BigDecimal("1000")).setScale(2, RoundingMode.UP));
+        drivingLineVo.setDistance(route.getBigDecimal("distance")
+                .divide(new BigDecimal("1000"))
+                .setScale(2, RoundingMode.UP)
+        );
         //路线
         drivingLineVo.setPolyline(route.getJSONArray("polyline"));
         return drivingLineVo;

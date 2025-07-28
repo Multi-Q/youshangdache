@@ -47,10 +47,6 @@ public class LoginAspect {
         if (StringUtils.hasText(customerId)) {
             AuthContextHolder.setUserId(Long.parseLong(customerId));
         }
-        try {
-            return proceedingJoinPoint.proceed();
-        } finally {
-            AuthContextHolder.removeUserId();
-        }
+        return proceedingJoinPoint.proceed(); //删除threadLocal键值应该在网关的拦截器中才对
     }
 }

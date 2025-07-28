@@ -21,6 +21,11 @@ public class MapController {
     @Resource
     private MapService mapService;
 
+    /**
+     * 计算驾驶线路
+     * @param calculateDrivingLineForm
+     * @return
+     */
     @Operation(summary = "计算驾驶线路")
     @PostMapping("/calculateDrivingLine")
     public Result<DrivingLineVo> calculateDrivingLine(@RequestBody CalculateDrivingLineForm calculateDrivingLineForm) {
