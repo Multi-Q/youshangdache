@@ -21,18 +21,33 @@ public class NewOrderController {
     @Autowired
     private NewOrderService newOrderService;
 
+    /**
+     * 乘客下单后，添加并开始新订单任务调度
+     * @param newOrderTaskVo 订单任务对象
+     * @return 该任务调度的id
+     */
     @Operation(summary = "添加并开始新订单任务调度")
     @PostMapping("/addAndStartTask")
     public Result<Long> addAndStartTask(@RequestBody NewOrderTaskVo newOrderTaskVo) {
         return Result.ok(newOrderService.addAndStartTask(newOrderTaskVo));
     }
 
+    /**
+     * 查询司机的最新订单数据
+     * @param driverId 司机id
+     * @return
+     */
     @Operation(summary = "查询司机的最新订单数据")
     @PostMapping("/findNewOrderQueueData/{driverId}")
     public Result<List<NewOrderDataVo>> findNewOrderQueueData(@PathVariable Long driverId) {
         return Result.ok(newOrderService.findNewOrderQueueData(driverId));
     }
 
+    /**
+     * 当司机接单成功后，就需要清空临时队列，释放系统空间
+     * @param driverId 司机id
+     * @return 成功true，失败false
+     */
     @Operation(summary = "清空新订单队列数据")
     @PostMapping("/clearNewOrderQueueData/{driverId}")
     public Result<Boolean> clearNewOrderQueueData(@PathVariable Long driverId) {

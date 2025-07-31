@@ -11,21 +11,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 
-@FeignClient(value = "service-dispatch")
+@FeignClient(value = "service-dispatch", path = "/dispatch")
 public interface NewOrderFeignClient {
 
     /**
-     * 将任务添加到任务队列中并启动任务
-     * @param newOrderDispatchVo 创建订单任务对象
-     * @return 任务调度id
+     * 乘客下单后，添加并开始新订单任务调度
+     *
+     * @param newOrderTaskVo 订单任务对象
+     * @return 该任务调度的id
      */
-    @PostMapping("/dispatch/newOrder/addAndStartTask")
-    Result<Long> addAndStartTask(@RequestBody NewOrderTaskVo newOrderDispatchVo);
+    @PostMapping("/newOrder/addAndStartTask")
+    public Result<Long> addAndStartTask(@RequestBody NewOrderTaskVo newOrderTaskVo);
 
-
-    @PostMapping("/dispatch/findNewOrderQueueData/{driverId}")
+    /**
+     * 查询司机的最新订单数据
+     *
+     * @param driverId 司机id
+     * @return
+     */
+    @PostMapping("/findNewOrderQueueData/{driverId}")
     public Result<List<NewOrderDataVo>> findNewOrderQueueData(@PathVariable Long driverId);
 
-    @PostMapping("/dispatch/clearNewOrderQueueData/{driverId}")
+    /**
+     * 当司机接单成功后，就需要清空临时队列，释放系统空间
+     *
+     * @param driverId 司机id
+     * @return 成功true，失败false
+     */
+    @PostMapping("/clearNewOrderQueueData/{driverId}")
     public Result<Boolean> clearNewOrderQueueData(@PathVariable Long driverId);
 }

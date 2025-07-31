@@ -38,7 +38,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -78,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         //1.获取订单支付相关信息
         OrderPayVo orderPayVo = orderInfoFeignClient.getOrderPayVo(createWxPaymentForm.getOrderNo(), createWxPaymentForm.getCustomerId()).getData();
         //判断是否在未支付状态
-        if (orderPayVo.getStatus().intValue() != OrderStatus.UNPAID.getStatus().intValue()) {
+        if (orderPayVo.getStatus().intValue() != OrderStatus.ORDER_UNPAID.getStatus().intValue()) {
             throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
         }
 
@@ -160,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
             driverInfoVo = driverInfoFeignClient.getDriverInfo(driverId).getData();
         }
         OrderBillVo orderBillVo = null;
-        if (orderInfo.getStatus() >= OrderStatus.UNPAID.getStatus()) {
+        if (orderInfo.getStatus() >= OrderStatus.ORDER_UNPAID.getStatus()) {
             orderBillVo = orderInfoFeignClient.getOrderBillInfo(orderId).getData();
         }
         OrderInfoVo orderInfoVo = new OrderInfoVo();
@@ -210,6 +209,10 @@ public class OrderServiceImpl implements OrderService {
     /**
      * 乘客提交打车订单
      *
+     * <p>
+     * 乘客提交打车订单后，开始计算预估费用，将数据保存到数据库，然后开启任务调度
+     * </p>
+
      * @param submitOrderForm 订单信息对象
      * @return 订单id
      */
@@ -251,7 +254,8 @@ public class OrderServiceImpl implements OrderService {
                 .expectDistance(orderInfoForm.getExpectDistance())
                 .expectTime(drivingLineVo.getDuration())
                 .favourFee(orderInfoForm.getFavourFee())
-                .createTime(new Date()).build();
+                .createTime(new Date())
+                .build();
 
         Long jobId = newOrderFeignClient.addAndStartTask(newOrderTaskVo).getData();
 

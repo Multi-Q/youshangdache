@@ -11,7 +11,7 @@ public enum DriverServiceStatusEnum {
     /**
      * 司机未接单
      */
-    DRIVER_NO_SERVICE(0, "未接单"),
+    DRIVER_NOT_SERVICE(0, "未接单"),
     /**
      * 司机开始接单
      */

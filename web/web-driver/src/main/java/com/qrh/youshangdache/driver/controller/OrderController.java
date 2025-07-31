@@ -33,8 +33,10 @@ public class OrderController {
 
     @Resource
     private OrderService orderService;
+
     /**
      * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     *
      * @param orderId 订单id
      * @return 订单状态代号
      */
@@ -45,6 +47,12 @@ public class OrderController {
         return Result.ok(orderService.getOrderStatus(orderId));
     }
 
+    /**
+     * 查询司机的最新订单数据
+     *
+     * @param driverId 司机id
+     * @return
+     */
     @Operation(summary = "查询司机的最新订单数据")
     @Login
     @PostMapping("/findNewOrderQueueData/{driverId}")
@@ -52,14 +60,28 @@ public class OrderController {
         return Result.ok(orderService.findNewOrderQueueData(driverId));
     }
 
-
+    /**
+     * 查找司机端当前订单
+     *
+     * <p>
+     * 司机只要有执行中的订单，没有结束，那么司机是不可以接单的，页面会弹出层，进入执行中的订单
+     * </p>
+     *
+     * @return 司机当前正在执行的订单数据
+     */
     @Operation(summary = "司机端查找当前订单")
     @Login
     @GetMapping("/searchDriverCurrentOrder ")
     public Result<CurrentOrderInfoVo> searchDriverCurrentOrder() {
         return Result.ok(orderService.searchDriverCurrentOrder(AuthContextHolder.getUserId()));
     }
-
+    @Operation(summary = "司机抢单")
+    @Login
+    @GetMapping("/robNewOrder/{orderId}")
+    public Result<Boolean> robNewOrder(@PathVariable Long orderId) {
+        Long driverId = AuthContextHolder.getUserId();
+        return Result.ok(orderService.robNewOrder(driverId, orderId));
+    }
     @Operation(summary = "根据订单id得到订单信息")
     @Login
     @GetMapping("/getOrderInfo/{orderId}")

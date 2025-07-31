@@ -27,6 +27,7 @@ public class OrderInfoController {
 
     /**
      * 保存订单信息
+     *
      * @param orderInfoForm 订单信息对象
      * @return 订单id
      */
@@ -38,6 +39,7 @@ public class OrderInfoController {
 
     /**
      * 乘客下完单后，订单状态为1，乘客端小程序会轮询订单状态，当订单状态为2时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     *
      * @param orderId 订单id
      * @return 订单状态代号
      */
@@ -47,14 +49,28 @@ public class OrderInfoController {
         return Result.ok(orderInfoService.getOrderStatus(orderId));
     }
 
+    /**
+     * 司机抢单
+     *
+     * <p>
+     * 当前司机已经开启接单服务了，实时轮流司机服务器端临时队列，只要有合适的新订单产生，那么就会轮回获取新订单数据，进行语音播放，
+     * 如果司机对这个订单感兴趣就可以抢单。注意：同一个新订单会放入满足条件的所有司机的临时队列，谁先抢到就是谁的。
+     * </p>
+     *
+     * @param driverId 司机id
+     * @param orderId  订单id
+     * @return true抢单成功，否则抛出订单不存在或抢单失败异常
+     */
     @Operation(summary = "司机抢单")
     @GetMapping("/robNewOrder/{driverId}/{orderId}")
     public Result<Boolean> robNewOrder(@PathVariable Long driverId, @PathVariable Long orderId) {
         return Result.ok(orderInfoService.robNewOrder(driverId, orderId));
     }
+
     /**
      * 乘客如果已经下过单了，而且这个订单在执行中，没有结束，
      * 那么乘客是不可以再下单的，页面会弹出层，进入执行中的订单。
+     *
      * @param customerId 用户id
      * @return 当前用户正在进行的订单信息
      */
@@ -64,6 +80,15 @@ public class OrderInfoController {
         return Result.ok(orderInfoService.searchCustomerCurrentOrder(customerId));
     }
 
+    /**
+     * 查找司机端当前订单
+     *
+     * <p>
+     * 司机只要有执行中的订单，没有结束，那么司机是不可以接单的，页面会弹出层，进入执行中的订单
+     * </p>
+     *
+     * @return 司机当前正在执行的订单数据
+     */
     @Operation(summary = "司机端查找当前订单")
     @GetMapping("/searchDriverCurrentOrder/{driverId}")
     public Result<CurrentOrderInfoVo> searchDriverCurrentOrder(@PathVariable Long driverId) {
@@ -141,26 +166,28 @@ public class OrderInfoController {
     public Result<OrderProfitsharingVo> getOrderProfitsharing(@PathVariable Long orderId) {
         return Result.ok(orderInfoService.getOrderProfitsharing(orderId));
     }
+
     @Operation(summary = "发送账单信息")
     @GetMapping("/sendOrderBillInfo/{orderId}/{driverId}")
-    public Result<Boolean> sendOrderBillInfo(@PathVariable Long orderId,@PathVariable Long driverId) {
-        return Result.ok(orderInfoService.sendOrderBillInfo(orderId,driverId));
+    public Result<Boolean> sendOrderBillInfo(@PathVariable Long orderId, @PathVariable Long driverId) {
+        return Result.ok(orderInfoService.sendOrderBillInfo(orderId, driverId));
     }
+
     @Operation(summary = "获取订单支付信息")
     @GetMapping("/getOrderPayVo/{orderNo}/{customerId}")
     public Result<OrderPayVo> getOrderPayVo(@PathVariable String orderNo, @PathVariable Long customerId) {
-        return Result.ok(orderInfoService.getOrderPayVo(orderNo,customerId));
+        return Result.ok(orderInfoService.getOrderPayVo(orderNo, customerId));
     }
 
     @Operation(summary = "更改订单支付状态")
     @GetMapping("/updateOrderPayStatus/{orderNo} ")
-    public Result<Boolean> updateOrderPayStatus(@PathVariable String orderNo ) {
+    public Result<Boolean> updateOrderPayStatus(@PathVariable String orderNo) {
         return Result.ok(orderInfoService.updateOrderPayStatus(orderNo));
     }
 
     @Operation(summary = "查询订单的系统奖励")
     @GetMapping("/getOrderRewardFee/{orderNo} ")
-    public Result<OrderRewardVo> getOrderRewardFee(@PathVariable String orderNo ) {
+    public Result<OrderRewardVo> getOrderRewardFee(@PathVariable String orderNo) {
         return Result.ok(orderInfoService.getOrderRewardFee(orderNo));
     }
 

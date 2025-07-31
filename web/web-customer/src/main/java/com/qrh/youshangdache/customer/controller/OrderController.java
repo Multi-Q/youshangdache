@@ -55,7 +55,7 @@ public class OrderController {
      * @param submitOrderForm 订单信息对象
      * @return 订单号
      */
-    @Operation(summary = "乘客下单")
+    @Operation(summary = "乘客提交打车订单")
     @Login
     @PostMapping("/submitOrder")
     public Result<Long> submitOrder(@RequestBody SubmitOrderForm submitOrderForm) {

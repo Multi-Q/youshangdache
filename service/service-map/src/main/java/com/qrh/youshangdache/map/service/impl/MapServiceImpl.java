@@ -48,7 +48,7 @@ public class MapServiceImpl implements MapService {
         //返回处理结果
         int status = result.getIntValue("status");
         if (status != 0) {
-            throw new GuiguException(ResultCodeEnum.MAP_FAIL);
+            throw new GuiguException(ResultCodeEnum.MAP_SERVICE_CALL_FAILED);
         }
         //返回获取路线信息
         JSONObject route = result.getJSONObject("result")

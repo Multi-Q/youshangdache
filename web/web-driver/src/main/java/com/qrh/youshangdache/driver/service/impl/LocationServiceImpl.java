@@ -1,12 +1,10 @@
 package com.qrh.youshangdache.driver.service.impl;
 
 import com.qrh.youshangdache.common.execption.GuiguException;
-import com.qrh.youshangdache.common.result.Result;
 import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import com.qrh.youshangdache.driver.client.DriverInfoFeignClient;
 import com.qrh.youshangdache.driver.service.LocationService;
 import com.qrh.youshangdache.map.client.LocationFeignClient;
-import com.qrh.youshangdache.map.client.MapFeignClient;
 import com.qrh.youshangdache.model.entity.driver.DriverSet;
 import com.qrh.youshangdache.model.enums.DriverServiceStatusEnum;
 import com.qrh.youshangdache.model.form.map.OrderServiceLocationForm;
@@ -14,7 +12,6 @@ import com.qrh.youshangdache.model.form.map.UpdateDriverLocationForm;
 import com.qrh.youshangdache.model.form.map.UpdateOrderLocationForm;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,7 +55,7 @@ public class LocationServiceImpl implements LocationService {
             return locationFeignClient.updateDriverLocation(updateDriverLocationForm).getData();
         } else {
             //没有接单
-            throw new GuiguException(ResultCodeEnum.DRIVER_NO_START_SERVICE);
+            throw new GuiguException(ResultCodeEnum.DRIVER_NOT_START_SERVICE);
         }
     }
 }

@@ -71,6 +71,11 @@ public class DriverController {
         return Result.ok(driverService.creatDriverFaceModel(driverFaceModelForm));
     }
 
+    /**
+     * 判断司机当日是否进行过人脸识别
+     *
+     * @return true当日已进行过人脸识别 | false当日未进行人脸识别
+     */
     @Operation(summary = "判断司机当日是否进行过人脸识别")
     @Login
     @PostMapping("/isFaceRecognition")
@@ -86,13 +91,26 @@ public class DriverController {
         return Result.ok(driverService.verifyDriverFace(driverFaceModelForm));
     }
 
+    /**
+     * 更新司机的接单状态为开启接单状态
+     *
+     * <p>
+     * 司机完成了当日人脸认证后，开启接单，然后删除司机在redis中的位置，及清空司机的临时订单列表数据
+     * </p>
+     *
+     * @return true
+     */
     @Operation(summary = "开始接单服务")
     @Login
     @PostMapping("/startService")
     public Result<Boolean> startService() {
         return Result.ok(driverService.startService(AuthContextHolder.getUserId()));
     }
-
+    /**
+     * 司机抢成功单，就要关闭接单服务。
+     *
+     * @return true
+     */
     @Operation(summary = "停止接单服务")
     @Login
     @PostMapping("/stopService")

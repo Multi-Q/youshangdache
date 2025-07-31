@@ -23,7 +23,6 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
@@ -166,7 +165,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
 
         //2、优惠券过期日期判断
         if (couponInfo.getExpireTime().before(new Date())) {
-            throw new GuiguException(ResultCodeEnum.COUPON_EXPIRE);
+            throw new GuiguException(ResultCodeEnum.COUPON_EXPIRED);
         }
 
         //3、校验库存，优惠券领取数量判断

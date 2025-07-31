@@ -104,9 +104,13 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     /**
      * 更新司机的接单状态
+     *
+     * <p>
+     *     司机完成当日人脸认证后，就默认司机开启接单了
+     * </p>
      * @param driverId 司机id
-     * @param status 司机当前的状态
-     * @return true|false
+     * @param status 司机当前的接单状态，由未接单改为开始接单
+     * @return true更新司机接单状态成功 | 更新司机接单状态失败
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -149,7 +153,12 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         }
         throw new GuiguException(ResultCodeEnum.DATA_ERROR);
     }
-
+    /**
+     * 判断司机当日是否进行过人脸识别
+     *
+     * @param driverId 司机id
+     * @return true当日已进行过人脸识别 | false当日未进行人脸识别
+     */
     @Override
     public Boolean isFaceRecognition(Long driverId) {
         LambdaQueryWrapper<DriverFaceRecognition> queryWrapper = new LambdaQueryWrapper<DriverFaceRecognition>()

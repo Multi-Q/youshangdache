@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "service-rules")
 public interface FeeRuleFeignClient {
     /**
-     * 计算低预估的订单费用
+     * 计算预预估的订单费用
      * @param calculateOrderFeeForm
      * @return
      */

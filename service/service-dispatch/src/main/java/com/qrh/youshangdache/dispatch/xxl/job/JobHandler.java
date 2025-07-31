@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class DispatchJobHandler {
+public class JobHandler {
     @Autowired
     private XxlJobLogMapper xxlJobLogMapper;
 

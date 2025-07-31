@@ -23,7 +23,11 @@ public interface DriverInfoService extends IService<DriverInfo> {
      * @return 司机登录后的司机基本信息
      */
     DriverLoginVo getDriverLoginInfo(Long driverId);
-
+    /**
+     * 获取司机认证信息
+     * @param driverId 司机id
+     * @return
+     */
     DriverAuthInfoVo getDriverAuthInfo(Long driverId);
 
     Boolean updateDriverAuthInfo(UpdateDriverAuthInfoForm updateDriverAuthInfoForm);
@@ -36,11 +40,25 @@ public interface DriverInfoService extends IService<DriverInfo> {
      * @return 司机的设置信息
      */
     DriverSet getDriverSet(Long driverId);
-
+    /**
+     * 判断司机当日是否进行过人脸识别
+     *
+     * @param driverId 司机id
+     * @return true当日已进行过人脸识别 | false当日未进行人脸识别
+     */
     Boolean isFaceRecognition(Long driverId);
 
     Boolean verifyDriverFace(DriverFaceModelForm driverFaceModelForm);
-
+    /**
+     * 更新司机的接单状态
+     *
+     * <p>
+     *     司机完成当日人脸认证后，就默认司机开启接单了
+     * </p>
+     * @param driverId 司机id
+     * @param status 司机当前的接单状态，由未接单改为开始接单
+     * @return true更新司机接单状态成功 | 更新司机接单状态失败
+     */
     Boolean updateServiceStatus(Long driverId, Integer status);
 
     DriverInfoVo getDriverInfoOrder(Long driverId);

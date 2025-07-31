@@ -1,17 +1,15 @@
 package com.qrh.youshangdache.driver.service.impl;
 
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.qrh.youshangdache.common.execption.GuiguException;
+import com.qrh.youshangdache.common.result.ResultCodeEnum;
 import com.qrh.youshangdache.driver.config.MinioProperties;
 import com.qrh.youshangdache.driver.service.FileService;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.errors.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +24,15 @@ public class FileServiceImpl implements FileService {
     @Resource
     private MinioProperties minioProperties;
 
+    /**
+     * 文件上传
+     *
+     * <p>
+     *     将文件上传至MinIO
+     * </p>
+     * @param file 文件
+     * @return
+     */
     @Override
     public String upload(MultipartFile file) {
         try {
@@ -50,7 +57,7 @@ public class FileServiceImpl implements FileService {
             minioClient.putObject(putObjectArgs);
             return minioProperties.getEndpointUrl() + "/" + minioProperties.getBucketName() + "/" + fileName + extFileName;
         } catch (Exception e) {
-           throw new GuiguException(ResultCodeEnum.UPLOAD_FAIL);
+           throw new GuiguException(ResultCodeEnum.FILE_UPLOAD_FAILED);
         }
     }
 }

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
@@ -34,17 +33,14 @@ import java.util.concurrent.TimeUnit;
 public class NewOrderServiceImpl implements NewOrderService {
     @Autowired
     private XxlJobClient xxlJobClient;
-
     @Autowired
     private OrderJobMapper orderJobMapper;
     @Autowired
     private LocationFeignClient locationFeignClient;
     @Autowired
     private OrderInfoFeignClient orderInfoFeignClient;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Resource
     private TransactionTemplate transactionTemplate;
 
@@ -62,10 +58,9 @@ public class NewOrderServiceImpl implements NewOrderService {
     }
 
     /**
-     * 司机查找新订单队列的数据
-     *
+     * 查询司机的最新订单数据
      * @param driverId 司机id
-     * @return 新订单数据对象
+     * @return
      */
     @Override
     public List<NewOrderDataVo> findNewOrderQueueData(Long driverId) {
@@ -80,10 +75,10 @@ public class NewOrderServiceImpl implements NewOrderService {
     }
 
     /**
-     * 执行调度任务
+     * 调度任务开始执行
      *
-     * @param jobId 任务id
-     * @return
+     * @param jobId 调度任务id
+     * @return 成功true，失败false
      */
     @Override
     public Boolean executeTask(Long jobId) {
@@ -96,18 +91,18 @@ public class NewOrderServiceImpl implements NewOrderService {
 
         //查询订单状态，如果该订单还在接单状态，继续执行；如果不在接单状态，则停止定时调度
         Integer orderStatus = orderInfoFeignClient.getOrderStatus(newOrderTaskVo.getOrderId()).getData();
-        if (orderStatus.intValue() != OrderStatus.WAITING_ACCEPT.getStatus().intValue()) {
+        if (!orderStatus.equals(OrderStatus.WAITING_ACCEPT.getStatus())) {
             xxlJobClient.stopJob(jobId);
             log.info("停止任务调度: {}", JSON.toJSONString(newOrderTaskVo));
             return true;
         }
 
         //搜索附近满足条件的司机
-        SearchNearByDriverForm searchNearByDriverForm = new SearchNearByDriverForm();
-        searchNearByDriverForm.setLongitude(newOrderTaskVo.getStartPointLongitude());
-        searchNearByDriverForm.setLatitude(newOrderTaskVo.getStartPointLatitude());
-        searchNearByDriverForm.setMileageDistance(newOrderTaskVo.getExpectDistance());
-        List<NearByDriverVo> nearByDriverVoList = locationFeignClient.searchNearByDriver(searchNearByDriverForm).getData();
+        SearchNearByDriverForm nearByDrivers = new SearchNearByDriverForm();
+        nearByDrivers.setLongitude(newOrderTaskVo.getStartPointLongitude());
+        nearByDrivers.setLatitude(newOrderTaskVo.getStartPointLatitude());
+        nearByDrivers.setMileageDistance(newOrderTaskVo.getExpectDistance());
+        List<NearByDriverVo> nearByDriverVoList = locationFeignClient.searchNearByDriver(nearByDrivers).getData();
         //给司机派发订单信息
         nearByDriverVoList.forEach(driver -> {
             //记录司机id，防止重复推送订单信息
@@ -119,16 +114,17 @@ public class NewOrderServiceImpl implements NewOrderService {
                 //过期时间：15分钟，新订单15分钟没人接单自动取消
                 stringRedisTemplate.expire(repeatKey, RedisConstant.DRIVER_ORDER_REPEAT_LIST_EXPIRES_TIME, TimeUnit.MINUTES);
 
-                NewOrderDataVo newOrderDataVo = new NewOrderDataVo();
-                newOrderDataVo.setOrderId(newOrderTaskVo.getOrderId());
-                newOrderDataVo.setStartLocation(newOrderTaskVo.getStartLocation());
-                newOrderDataVo.setEndLocation(newOrderTaskVo.getEndLocation());
-                newOrderDataVo.setExpectAmount(newOrderTaskVo.getExpectAmount());
-                newOrderDataVo.setExpectDistance(newOrderTaskVo.getExpectDistance());
-                newOrderDataVo.setExpectTime(newOrderTaskVo.getExpectTime());
-                newOrderDataVo.setFavourFee(newOrderTaskVo.getFavourFee());
-                newOrderDataVo.setDistance(driver.getDistance());
-                newOrderDataVo.setCreateTime(newOrderTaskVo.getCreateTime());
+                NewOrderDataVo newOrderDataVo = NewOrderDataVo.builder()
+                        .orderId(newOrderTaskVo.getOrderId())
+                        .startLocation(newOrderTaskVo.getStartLocation())
+                        .endLocation(newOrderTaskVo.getEndLocation())
+                        .expectAmount(newOrderTaskVo.getExpectAmount())
+                        .expectDistance(newOrderTaskVo.getExpectDistance())
+                        .expectTime(newOrderTaskVo.getExpectTime())
+                        .favourFee(newOrderTaskVo.getFavourFee())
+                        .distance(driver.getDistance())
+                        .createTime(newOrderTaskVo.getCreateTime())
+                        .build();
 
                 //将消息保存到司机的临时队列里面，司机接单了会定时轮询到他的临时队列获取订单消息
                 String key = RedisConstant.DRIVER_ORDER_TEMP_LIST + driver.getDriverId();
@@ -143,24 +139,33 @@ public class NewOrderServiceImpl implements NewOrderService {
     }
 
 
-    //    @Transactional(rollbackFor = Exception.class)
+    /**
+     * 乘客下单后，添加并开始新订单任务调度
+     *
+     * @param newOrderTaskVo 订单任务对象
+     * @return 该任务调度的id
+     */
     @Override
     public Long addAndStartTask(NewOrderTaskVo newOrderTaskVo) {
+        // 1、先查数据库中有没有这个任务
         OrderJob orderJob = orderJobMapper.selectOne(new LambdaQueryWrapper<OrderJob>().eq(OrderJob::getOrderId, newOrderTaskVo.getOrderId()));
+        // 2、没有则创建任务
         if (null == orderJob) {
+            //  每1分钟执行一次，处理任务的bean为：newOrderTaskHandler
             Long jobId = xxlJobClient.addAndStart("newOrderTaskHandler",
                     "",
                     "0 0/1 * * * ?",
                     "新订单任务,订单id：" + newOrderTaskVo.getOrderId()
             );
 
-            //记录订单与任务的关联信息
+            // 3、记录订单与任务的关联信息
             orderJob = new OrderJob();
             orderJob.setOrderId(newOrderTaskVo.getOrderId());
             orderJob.setJobId(jobId);
             orderJob.setParameter(JSONObject.toJSONString(newOrderTaskVo));
 
-            OrderJob finalOrderJob = orderJob;
+            final OrderJob finalOrderJob = orderJob;
+            // 4、插入数据库
             transactionTemplate.execute(action -> {
                 try {
                     return orderJobMapper.insert(finalOrderJob);

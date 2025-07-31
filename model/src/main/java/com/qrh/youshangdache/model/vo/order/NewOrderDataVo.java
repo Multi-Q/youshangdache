@@ -1,12 +1,14 @@
 package com.qrh.youshangdache.model.vo.order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Data
+@Getter
+@Builder
 public class NewOrderDataVo {
 
 	@Schema(description = "订单id")
