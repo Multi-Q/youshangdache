@@ -9,7 +9,7 @@ import com.qrh.youshangdache.driver.service.OrderService;
 import com.qrh.youshangdache.map.client.LocationFeignClient;
 import com.qrh.youshangdache.map.client.MapFeignClient;
 import com.qrh.youshangdache.model.entity.order.OrderInfo;
-import com.qrh.youshangdache.model.enums.OrderStatus;
+import com.qrh.youshangdache.model.enums.OrderStatusEnum;
 import com.qrh.youshangdache.model.form.map.CalculateDrivingLineForm;
 import com.qrh.youshangdache.model.form.order.OrderFeeForm;
 import com.qrh.youshangdache.model.form.order.StartDriveForm;
@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
                 orderServiceLastLocationVo.getLatitude().doubleValue(),
                 orderServiceLastLocationVo.getLongitude().doubleValue()
         );
-        if (distance > SystemConstant.DRIVER_START_LOCATION_DISTION) {
+        if (distance > SystemConstant.DRIVER_START_LOCATION_DISTANCE) {
             throw new GuiguException(ResultCodeEnum.DRIVER_END_LOCATION_DISTANCE_ERROR);
         }
 
@@ -190,12 +190,27 @@ public class OrderServiceImpl implements OrderService {
     public Boolean startDrive(StartDriveForm startDriveForm) {
         return orderInfoFeignClient.startDrive(startDriveForm).getData();
     }
-
+    /**
+     * 更新代驾车辆信息
+     *
+     * <p>
+     * 司机到达代驾起始点，联系了乘客，见到了代驾车辆，要拍照与录入车辆信息
+     * </p>
+     *
+     * @param updateOrderCartForm
+     * @return true
+     */
     @Override
     public Boolean updateOrderCart(UpdateOrderCartForm updateOrderCartForm) {
         return orderInfoFeignClient.updateOrderCart(updateOrderCartForm).getData();
     }
-
+    /**
+     * 司机到达起始点
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     @Override
     public Boolean driverArriveStartLocation(Long orderId, Long driverId) {
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfoByOrderId(orderId).getData();
@@ -204,26 +219,39 @@ public class OrderServiceImpl implements OrderService {
                 orderInfo.getStartPointLongitude().doubleValue(),
                 orderLocationVo.getLatitude().doubleValue(),
                 orderLocationVo.getLongitude().doubleValue());
-        if (distance > SystemConstant.DRIVER_START_LOCATION_DISTION) {
+        if (distance > SystemConstant.DRIVER_START_LOCATION_DISTANCE) {
             throw new GuiguException(ResultCodeEnum.DRIVER_START_LOCATION_DISTANCE_ERROR);
         }
         return orderInfoFeignClient.driverArriveStartLocation(orderId, driverId).getData();
     }
 
+    /**
+     * 计算最佳驾驶路线-司乘同显
+     *
+     * @param calculateDrivingLineForm 起点坐标和终点坐标对象
+     * @return 路线
+     */
     @Override
     public DrivingLineVo calculateDrivingLine(CalculateDrivingLineForm calculateDrivingLineForm) {
         return mapFeignClient.calculateDrivingLine(calculateDrivingLineForm).getData();
     }
 
+    /**
+     * 获取执行中的订单
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return 执行中的订单的数据
+     */
     @Override
     public OrderInfoVo getOrderInfoByOrderId(Long orderId, Long driverId) {
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfoByOrderId(orderId).getData();
-        if (orderInfo.getCustomerId() != driverId) {
-            throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
+        if (!orderInfo.getCustomerId().equals(driverId)) {
+            throw new GuiguException(ResultCodeEnum.ORDER_NOT_EXIST);
         }
         OrderBillVo orderBillVo = null;
         OrderProfitsharingVo orderProfitsharingVo = null;
-        if (orderInfo.getStatus() >= OrderStatus.END_SERVICE.getStatus()) {
+        if (orderInfo.getStatus() >= OrderStatusEnum.END_SERVICE.getStatus()) {
             orderBillVo = orderInfoFeignClient.getOrderBillInfo(orderId).getData();
             orderProfitsharingVo = orderInfoFeignClient.getOrderProfitsharing(orderId).getData();
         }

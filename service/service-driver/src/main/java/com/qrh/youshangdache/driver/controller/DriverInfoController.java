@@ -22,8 +22,10 @@ public class DriverInfoController {
 
     @Resource
     private DriverInfoService driverInfoService;
+
     /**
      * 司机端-小程序授权登录
+     *
      * @param code 微信临时票据
      * @return 用户id
      */
@@ -32,8 +34,10 @@ public class DriverInfoController {
     public Result<Long> login(@PathVariable String code) {
         return Result.ok(driverInfoService.login(code));
     }
+
     /**
      * 司机端-获取登录后的司机信息
+     *
      * @param driverId 司机id
      * @return 司机登录后的司机基本信息
      */
@@ -45,6 +49,7 @@ public class DriverInfoController {
 
     /**
      * 获取司机认证信息
+     *
      * @param driverId 司机id
      * @return
      */
@@ -68,6 +73,7 @@ public class DriverInfoController {
 
     /**
      * 获取司机设置信息
+     *
      * @param driverId 司机id
      * @return 司机的设置信息
      */
@@ -76,6 +82,7 @@ public class DriverInfoController {
     public Result<DriverSet> getDriverSettingInfo(@PathVariable Long driverId) {
         return Result.ok(driverInfoService.getDriverSet(driverId));
     }
+
     /**
      * 判断司机当日是否进行过人脸识别
      *
@@ -98,23 +105,31 @@ public class DriverInfoController {
      * 更新司机的接单状态
      *
      * <p>
-     *     司机完成当日人脸认证后，就默认司机开启接单了
+     * 司机完成当日人脸认证后，就默认司机开启接单了
      * </p>
+     *
      * @param driverId 司机id
-     * @param status 司机当前的接单状态，由未接单改为开始接单
+     * @param status   司机当前的接单状态，由未接单改为开始接单
      * @return true更新司机接单状态成功 | 更新司机接单状态失败
      */
     @Operation(summary = "更新司机的接单状态")
     @PostMapping("/updateServiceStatus/{driverId}/{status}")
-    public Result<Boolean> updateServiceStatus(@PathVariable Long driverId,@PathVariable Integer status) {
-        return Result.ok(driverInfoService.updateServiceStatus(driverId,status));
+    public Result<Boolean> updateServiceStatus(@PathVariable Long driverId, @PathVariable Integer status) {
+        return Result.ok(driverInfoService.updateServiceStatus(driverId, status));
     }
 
+    /**
+     * 获取司机基本信息
+     *
+     * @param driverId 司机id
+     * @return 司机基本信息
+     */
     @Operation(summary = "获取司机基本信息")
     @PostMapping("/getDriverInfo/{driverId}")
-    public Result<DriverInfoVo> getDriverInfo(@PathVariable Long driverId ) {
+    public Result<DriverInfoVo> getDriverInfo(@PathVariable Long driverId) {
         return Result.ok(driverInfoService.getDriverInfoOrder(driverId));
     }
+
     @Operation(summary = "获取客户的openId")
     @GetMapping("/getDriverOpenId/{driverId}")
     public Result<String> getDriverOpenId(@PathVariable Long driverId) {

@@ -8,7 +8,7 @@ import com.qrh.youshangdache.dispatch.service.NewOrderService;
 import com.qrh.youshangdache.dispatch.xxl.client.XxlJobClient;
 import com.qrh.youshangdache.map.client.LocationFeignClient;
 import com.qrh.youshangdache.model.entity.dispatch.OrderJob;
-import com.qrh.youshangdache.model.enums.OrderStatus;
+import com.qrh.youshangdache.model.enums.OrderStatusEnum;
 import com.qrh.youshangdache.model.form.map.SearchNearByDriverForm;
 import com.qrh.youshangdache.model.vo.dispatch.NewOrderTaskVo;
 import com.qrh.youshangdache.model.vo.map.NearByDriverVo;
@@ -91,7 +91,7 @@ public class NewOrderServiceImpl implements NewOrderService {
 
         //查询订单状态，如果该订单还在接单状态，继续执行；如果不在接单状态，则停止定时调度
         Integer orderStatus = orderInfoFeignClient.getOrderStatus(newOrderTaskVo.getOrderId()).getData();
-        if (!orderStatus.equals(OrderStatus.WAITING_ACCEPT.getStatus())) {
+        if (!orderStatus.equals(OrderStatusEnum.WAITING_ACCEPT.getStatus())) {
             xxlJobClient.stopJob(jobId);
             log.info("停止任务调度: {}", JSON.toJSONString(newOrderTaskVo));
             return true;

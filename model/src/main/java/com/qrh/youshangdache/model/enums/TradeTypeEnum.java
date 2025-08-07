@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 
 @Getter
-public enum TradeType {
+public enum TradeTypeEnum {
 
     REWARD(1, "系统奖励"),
     ;
@@ -13,7 +13,7 @@ public enum TradeType {
     private Integer type;
     private String content;
 
-    TradeType(Integer type, String content) {
+    TradeTypeEnum(Integer type, String content) {
         this.type = type;
         this.content = content;
     }

@@ -75,12 +75,35 @@ public interface OrderInfoFeignClient {
     @GetMapping("/robNewOrder/{driverId}/{orderId}")
     public Result<Boolean> robNewOrder(@PathVariable Long driverId, @PathVariable Long orderId);
 
+    /**
+     * 获取执行中的订单
+     *
+     * @param orderId 订单id
+     * @return 执行中的订单的数据
+     */
     @GetMapping("/getOrderInfo/{orderId}")
     public Result<OrderInfo> getOrderInfoByOrderId(@PathVariable Long orderId);
 
+    /**
+     * 司机到达起始位置
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     @GetMapping("/driverArriveStartLocation/{orderId}/{driverId}")
     public Result<Boolean> driverArriveStartLocation(@PathVariable Long orderId, @PathVariable Long driverId);
 
+    /**
+     * 更新代驾车辆信息
+     *
+     * <p>
+     * 司机到达代驾起始点，联系了乘客，见到了代驾车辆，要拍照与录入车辆信息
+     * </p>
+     *
+     * @param updateOrderCartForm
+     * @return true
+     */
     @PostMapping("/updateOrderCart")
     public Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm);
 
@@ -103,6 +126,12 @@ public interface OrderInfoFeignClient {
                                               @PathVariable Long limit,
                                               @PathVariable Long page);
 
+    /**
+     * 获取<strong>执行中</strong>的订单
+     *
+     * @param orderId 订单id
+     * @return 执行中的订单的数据
+     */
     @GetMapping("/getOrderBillInfo/{orderId}")
     public Result<OrderBillVo> getOrderBillInfo(@PathVariable Long orderId);
 

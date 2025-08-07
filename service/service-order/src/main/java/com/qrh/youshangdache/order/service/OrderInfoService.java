@@ -43,8 +43,12 @@ public interface OrderInfoService extends IService<OrderInfo> {
     Boolean robNewOrder(Long driverId, Long orderId);
 
     /**
+     * 查找用户当前正在执行的订单
+     *
+     * <p>
      * 乘客如果已经下过单了，而且这个订单在执行中，没有结束，
      * 那么乘客是不可以再下单的，页面会弹出层，进入执行中的订单。
+     * </p>
      *
      * @param customerId 用户id
      * @return 当前用户正在进行的订单信息
@@ -60,9 +64,20 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @return 司机当前正在执行的订单数据
      */
     CurrentOrderInfoVo searchDriverCurrentOrder(Long driverId);
-
+    /**
+     * 司机到达起始点
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     Boolean driverArriveStartLocation(Long orderId, Long driverId);
-
+    /**
+     * 更新代驾车辆信息
+     *
+     * @param updateOrderCartForm
+     * @return true
+     */
     Boolean updateOrderCart(UpdateOrderCartForm updateOrderCartForm);
 
     Boolean startDrive(StartDriveForm startDriveForm);

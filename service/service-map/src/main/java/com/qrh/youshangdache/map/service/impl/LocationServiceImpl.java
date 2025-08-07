@@ -135,10 +135,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * 从redis缓存中获取当前司机的实时位置
+     * 司机赶往代驾起始点，更新订单经纬度位置
+     *
+     * <p>
+     * 从redis中获取订单的坐标
+     * </p>
      *
      * @param orderId 订单id
-     * @return
+     * @return 订单的坐标
      */
     @Override
     public OrderLocationVo getCacheOrderLocation(Long orderId) {
@@ -147,10 +151,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * 司机赶往代驾点，会实时更新司机的经纬度位置到Redis缓存，这样乘客端才能看见司机的动向，司机端更新，乘客端获取
+     * 司机赶往代驾起始点，更新订单地址到缓存
      *
-     * @param updateOrderLocationForm
-     * @return
+     * <p>
+     * 司机赶往代驾点，实时更新司机的经纬度位置到Redis缓存，乘客端可以看见司机的动向，司机端更新，乘客端获取
+     * </p>
+     *
+     * @param updateOrderLocationForm 订单的坐标，即用户下单时的坐标
+     * @return true
      */
     @Override
     public Boolean updateOrderLocationToCache(UpdateOrderLocationForm updateOrderLocationForm) {

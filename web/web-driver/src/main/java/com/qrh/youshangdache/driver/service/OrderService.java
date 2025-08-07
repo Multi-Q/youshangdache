@@ -31,6 +31,7 @@ public interface OrderService {
      * @return
      */
     List<NewOrderDataVo> findNewOrderQueueData(Long driverId);
+
     /**
      * 查找司机端当前订单
      *
@@ -42,12 +43,40 @@ public interface OrderService {
      */
     CurrentOrderInfoVo searchDriverCurrentOrder(Long driverId);
 
+    /**
+     * 获取执行中的订单
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return 执行中的订单的数据
+     */
     OrderInfoVo getOrderInfoByOrderId(Long orderId, Long driverId);
 
+    /**
+     * 计算最佳驾驶路线-司乘同显
+     *
+     * @param calculateDrivingLineForm 起点坐标和终点坐标对象
+     * @return 路线
+     */
     DrivingLineVo calculateDrivingLine(CalculateDrivingLineForm calculateDrivingLineForm);
-
+    /**
+     * 司机到达起始点
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     Boolean driverArriveStartLocation(Long orderId, Long driverId);
-
+    /**
+     * 更新代驾车辆信息
+     *
+     * <p>
+     * 司机到达代驾起始点，联系了乘客，见到了代驾车辆，要拍照与录入车辆信息
+     * </p>
+     *
+     * @param updateOrderCartForm
+     * @return true
+     */
     Boolean updateOrderCart(UpdateOrderCartForm updateOrderCartForm);
 
     Boolean startDrive(StartDriveForm startDriveForm);
@@ -57,6 +86,7 @@ public interface OrderService {
     PageVo findDriverOrderPage(Page<OrderInfo> pageParam, Long driverId);
 
     Boolean sendOrderBillInfo(Long orderId, Long driverId);
+
     /**
      * 司机抢单
      *

@@ -30,13 +30,44 @@ public interface OrderService {
      * @return 订单状态代号
      */
     Integer getOrderStatus(Long orderId);
+    /**
+     * 获取执行中的订单
+     * @param orderId 订单id
+     * @param customerId 用户id
+     * @return 执行中的订单的数据
+     */
     OrderInfoVo getOrderInfoByOrderId(Long orderId, Long customerId);
 
+    /**
+     * 根据订单id获取司机基本信息
+     *
+     * <p>
+     * 乘客端进入司乘同显页面，需要加载司机的基本信息，显示司机的姓名、头像及驾龄等信息
+     * </p>
+     *
+     * @param orderId    订单id
+     * @param customerId 用户id
+     * @return 司机基本信息
+     */
     DriverInfoVo getDriverInfo(Long orderId,Long customerId);
 
-
+    /**
+     * 司机赶往代驾起始点，更新订单经纬度位置
+     *
+     * <p>
+     * 从redis中获取订单的坐标
+     * </p>
+     *
+     * @param orderId 订单id
+     * @return 订单的坐标
+     */
     OrderLocationVo getCacheOrderLocation(Long orderId );
-
+    /**
+     * 计算最佳驾驶路线
+     *
+     * @param calculateDrivingLineForm
+     * @return 路线
+     */
     DrivingLineVo calculateDriverLine(CalculateDrivingLineForm calculateDrivingLineForm);
 
     OrderServiceLastLocationVo getOrderServiceLastLocation(Long orderId);

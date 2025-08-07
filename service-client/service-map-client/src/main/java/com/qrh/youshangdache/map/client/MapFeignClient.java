@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "service-map")
 public interface MapFeignClient {
     /**
-     * 计算驾驶路线
+     * 计算最佳驾驶路线-司乘同显
      *
-     * @param calculateDrivingLineForm
-     * @return
+     * @param calculateDrivingLineForm 起点坐标和终点坐标对象
+     * @return 路线
      */
     @PostMapping("/map/calculateDrivingLine")
     Result<DrivingLineVo> calculateDrivingLine(@RequestBody CalculateDrivingLineForm calculateDrivingLineForm);

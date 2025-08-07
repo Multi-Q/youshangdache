@@ -75,6 +75,7 @@ public class OrderController {
     public Result<CurrentOrderInfoVo> searchDriverCurrentOrder() {
         return Result.ok(orderService.searchDriverCurrentOrder(AuthContextHolder.getUserId()));
     }
+
     @Operation(summary = "司机抢单")
     @Login
     @GetMapping("/robNewOrder/{orderId}")
@@ -82,6 +83,13 @@ public class OrderController {
         Long driverId = AuthContextHolder.getUserId();
         return Result.ok(orderService.robNewOrder(driverId, orderId));
     }
+
+    /**
+     * 获取执行中的订单
+     *
+     * @param orderId 订单id
+     * @return 执行中的订单的数据
+     */
     @Operation(summary = "根据订单id得到订单信息")
     @Login
     @GetMapping("/getOrderInfo/{orderId}")
@@ -89,13 +97,24 @@ public class OrderController {
         return Result.ok(orderService.getOrderInfoByOrderId(orderId, AuthContextHolder.getUserId()));
     }
 
+    /**
+     * 计算最佳驾驶路线-司乘同显
+     *
+     * @param calculateDrivingLineForm 起点坐标和终点坐标对象
+     * @return 路线
+     */
     @Operation(summary = "计算最佳驾驶路线")
     @Login
     @GetMapping("/calculateDrivingLine")
     public Result<DrivingLineVo> calculateDrivingLine(@RequestBody CalculateDrivingLineForm calculateDrivingLineForm) {
         return Result.ok(orderService.calculateDrivingLine(calculateDrivingLineForm));
     }
-
+    /**
+     * 司机到达起始点
+     *
+     * @param orderId  订单id
+     * @return true
+     */
     @Operation(summary = "司机到达起始点")
     @Login
     @GetMapping("/driverArriveStartLocation/{orderId}")
@@ -103,7 +122,16 @@ public class OrderController {
         Long driverId = AuthContextHolder.getUserId();
         return Result.ok(orderService.driverArriveStartLocation(orderId, driverId));
     }
-
+    /**
+     * 更新代驾车辆信息
+     *
+     * <p>
+     * 司机到达代驾起始点，联系了乘客，见到了代驾车辆，要拍照与录入车辆信息
+     * </p>
+     *
+     * @param updateOrderCartForm
+     * @return true
+     */
     @Operation(summary = "更新代驾车辆信息")
     @Login
     @PostMapping("/updateOrderCart")

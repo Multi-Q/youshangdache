@@ -52,6 +52,7 @@ public class OrderController {
 
     /**
      * 乘客提交打车订单
+     *
      * @param submitOrderForm 订单信息对象
      * @return 订单号
      */
@@ -62,8 +63,10 @@ public class OrderController {
         submitOrderForm.setCustomerId(AuthContextHolder.getUserId());
         return Result.ok(orderService.submitOrder(submitOrderForm));
     }
+
     /**
      * 乘客下完单后，订单状态为1，乘客端小程序会轮询订单状态，当订单状态为2时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     *
      * @param orderId 订单id
      * @return 订单状态代号
      */
@@ -74,6 +77,12 @@ public class OrderController {
         return Result.ok(orderService.getOrderStatus(orderId));
     }
 
+    /**
+     * 获取执行中的订单
+     *
+     * @param orderId 订单id
+     * @return 执行中的订单的数据
+     */
     @Operation(summary = "根据订单id得到订单信息")
     @GetMapping("/getOrderInfo/{orderId}")
     @Login
@@ -81,6 +90,16 @@ public class OrderController {
         return Result.ok(orderService.getOrderInfoByOrderId(orderId, AuthContextHolder.getUserId()));
     }
 
+    /**
+     * 根据订单id获取司机基本信息
+     *
+     * <p>
+     * 乘客端进入司乘同显页面，需要加载司机的基本信息，显示司机的姓名、头像及驾龄等信息
+     * </p>
+     *
+     * @param orderId 订单id
+     * @return 司机基本信息
+     */
     @Operation(summary = "根据订单id获取司机基本信息")
     @Login
     @GetMapping("/getDriverInfo/{orderId}")
@@ -88,6 +107,16 @@ public class OrderController {
         return Result.ok(orderService.getDriverInfo(orderId, AuthContextHolder.getUserId()));
     }
 
+    /**
+     * 司机赶往代驾起始点，更新订单经纬度位置
+     *
+     * <p>
+     * 从redis中获取订单的坐标
+     * </p>
+     *
+     * @param orderId 订单id
+     * @return 订单的坐标
+     */
     @Operation(summary = "司机赶往代驾起始点，更新订单经纬度位置")
     @Login
     @GetMapping("/getCacheOrderLocation/{orderId}")
@@ -95,6 +124,12 @@ public class OrderController {
         return Result.ok(orderService.getCacheOrderLocation(orderId));
     }
 
+    /**
+     * 计算最佳驾驶路线
+     *
+     * @param calculateDrivingLineForm
+     * @return 路线
+     */
     @Operation(summary = "计算最佳驾驶路线")
     @Login
     @GetMapping("/calculateDriverLine")

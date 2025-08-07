@@ -75,6 +75,11 @@ public interface DriverInfoFeignClient {
     @PostMapping("/updateServiceStatus/{driverId}/{status}")
     public Result<Boolean> updateServiceStatus(@PathVariable Long driverId, @PathVariable Integer status);
 
+    /**
+     * 获取司机基本信息
+     * @param driverId 司机id
+     * @return 司机基本信息
+     */
     @PostMapping("/getDriverInfo/{driverId}")
     public Result<DriverInfoVo> getDriverInfo(@PathVariable Long driverId);
 

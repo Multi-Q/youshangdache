@@ -10,7 +10,7 @@ import com.qrh.youshangdache.common.service.RabbitService;
 import com.qrh.youshangdache.common.util.RequestUtils;
 import com.qrh.youshangdache.driver.client.DriverAccountFeignClient;
 import com.qrh.youshangdache.model.entity.payment.PaymentInfo;
-import com.qrh.youshangdache.model.enums.TradeType;
+import com.qrh.youshangdache.model.enums.TradeTypeEnum;
 import com.qrh.youshangdache.model.form.driver.TransferForm;
 import com.qrh.youshangdache.model.form.payment.PaymentInfoForm;
 import com.qrh.youshangdache.model.form.payment.ProfitsharingForm;
@@ -32,7 +32,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,8 +63,8 @@ public class WxPayServiceImpl implements WxPayService {
         if(null != orderRewardVo.getRewardFee() && orderRewardVo.getRewardFee().doubleValue() > 0) {
             TransferForm transferForm = new TransferForm();
             transferForm.setTradeNo(orderNo);
-            transferForm.setTradeType(TradeType.REWARD.getType());
-            transferForm.setContent(TradeType.REWARD.getContent());
+            transferForm.setTradeType(TradeTypeEnum.REWARD.getType());
+            transferForm.setContent(TradeTypeEnum.REWARD.getContent());
             transferForm.setAmount(orderRewardVo.getRewardFee());
             transferForm.setDriverId(orderRewardVo.getDriverId());
             driverAccountFeignClient.transfer(transferForm);

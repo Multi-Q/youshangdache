@@ -68,8 +68,12 @@ public class OrderInfoController {
     }
 
     /**
+     * 查找用户当前正在执行的订单
+     *
+     * <p>
      * 乘客如果已经下过单了，而且这个订单在执行中，没有结束，
      * 那么乘客是不可以再下单的，页面会弹出层，进入执行中的订单。
+     * </p>
      *
      * @param customerId 用户id
      * @return 当前用户正在进行的订单信息
@@ -95,18 +99,37 @@ public class OrderInfoController {
         return Result.ok(orderInfoService.searchDriverCurrentOrder(driverId));
     }
 
+    /**
+     * 获取<strong>执行中</strong>的订单
+     *
+     * @param orderId 订单id
+     * @return 执行中的订单的数据
+     */
     @Operation(summary = "根据订单id得到订单信息")
     @GetMapping("/getOrderInfo/{orderId}")
     public Result<OrderInfo> getOrderInfoByOrderId(@PathVariable Long orderId) {
         return Result.ok(orderInfoService.getById(orderId));
     }
 
+    /**
+     * 司机到达起始点
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     @Operation(summary = "司机到达起始点")
     @GetMapping("/driverArriveStartLocation/{orderId}/{driverId}")
     public Result<Boolean> driverArriveStartLocation(@PathVariable Long orderId, @PathVariable Long driverId) {
         return Result.ok(orderInfoService.driverArriveStartLocation(orderId, driverId));
     }
 
+    /**
+     * 更新代驾车辆信息
+     *
+     * @param updateOrderCartForm
+     * @return true
+     */
     @Operation(summary = "更新代驾车辆信息")
     @PostMapping("/updateOrderCart")
     public Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm) {

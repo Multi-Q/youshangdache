@@ -19,7 +19,16 @@ public interface LocationService {
      * @return true
      */
     Boolean updateDriverLocation(UpdateDriverLocationForm updateDriverLocationForm);
-
+    /**
+     * 司机赶往代驾起始点，更新订单地址到缓存
+     *
+     * <p>
+     * 司机赶往代驾点，实时更新司机的经纬度位置到Redis缓存，乘客端可以看见司机的动向，司机端更新，乘客端获取
+     * </p>
+     *
+     * @param updateOrderLocationForm 订单的坐标，即用户下单时的坐标
+     * @return true
+     */
     Boolean updateOrderLocationToCache(UpdateOrderLocationForm updateOrderLocationForm);
 
     Boolean saveOrderServiceLocation(List<OrderServiceLocationForm> orderServiceLocationForms);

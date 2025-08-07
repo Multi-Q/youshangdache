@@ -11,7 +11,7 @@ import com.qrh.youshangdache.map.client.LocationFeignClient;
 import com.qrh.youshangdache.map.client.MapFeignClient;
 import com.qrh.youshangdache.map.client.WxPayFeignClient;
 import com.qrh.youshangdache.model.entity.order.OrderInfo;
-import com.qrh.youshangdache.model.enums.OrderStatus;
+import com.qrh.youshangdache.model.enums.OrderStatusEnum;
 import com.qrh.youshangdache.model.form.coupon.UseCouponForm;
 import com.qrh.youshangdache.model.form.customer.ExpectOrderForm;
 import com.qrh.youshangdache.model.form.customer.SubmitOrderForm;
@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         //1.获取订单支付相关信息
         OrderPayVo orderPayVo = orderInfoFeignClient.getOrderPayVo(createWxPaymentForm.getOrderNo(), createWxPaymentForm.getCustomerId()).getData();
         //判断是否在未支付状态
-        if (orderPayVo.getStatus().intValue() != OrderStatus.ORDER_UNPAID.getStatus().intValue()) {
+        if (orderPayVo.getStatus().intValue() != OrderStatusEnum.ORDER_UNPAID.getStatus().intValue()) {
             throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
         }
 
@@ -127,39 +127,70 @@ public class OrderServiceImpl implements OrderService {
     public OrderServiceLastLocationVo getOrderServiceLastLocation(Long orderId) {
         return locationFeignClient.getOrderServiceLastLocation(orderId).getData();
     }
-
+    /**
+     * 计算最佳驾驶路线
+     *
+     * @param calculateDrivingLineForm
+     * @return 路线
+     */
     @Override
     public DrivingLineVo calculateDriverLine(CalculateDrivingLineForm calculateDrivingLineForm) {
         return mapFeignClient.calculateDrivingLine(calculateDrivingLineForm).getData();
     }
-
+    /**
+     * 司机赶往代驾起始点，更新订单经纬度位置
+     *
+     * <p>
+     * 从redis中获取订单的坐标
+     * </p>
+     *
+     * @param orderId 订单id
+     * @return 订单的坐标
+     */
     @Override
     public OrderLocationVo getCacheOrderLocation(Long orderId) {
         return locationFeignClient.getCacheOrderLocation(orderId).getData();
     }
 
+    /**
+     * 根据订单id获取司机基本信息
+     *
+     * <p>
+     * 乘客端进入司乘同显页面，需要加载司机的基本信息，显示司机的姓名、头像及驾龄等信息
+     * </p>
+     *
+     * @param orderId    订单id
+     * @param customerId 用户id
+     * @return 司机基本信息
+     */
     @Override
     public DriverInfoVo getDriverInfo(Long orderId, Long customerId) {
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfoByOrderId(orderId).getData();
-        if (orderInfo.getCustomerId() != customerId) {
+        if (!orderInfo.getCustomerId().equals(customerId)) {
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
         return driverInfoFeignClient.getDriverInfo(orderInfo.getDriverId()).getData();
     }
 
+    /**
+     * 获取执行中的订单
+     *
+     * @param orderId    订单id
+     * @param customerId 用户id
+     * @return 执行中的订单的数据
+     */
     @Override
     public OrderInfoVo getOrderInfoByOrderId(Long orderId, Long customerId) {
         OrderInfo orderInfo = orderInfoFeignClient.getOrderInfoByOrderId(orderId).getData();
-        if (orderInfo.getCustomerId() != customerId) {
-            throw new GuiguException(ResultCodeEnum.ILLEGAL_REQUEST);
-        }
+        if (!orderInfo.getCustomerId().equals(customerId)) throw new GuiguException(ResultCodeEnum.ORDER_NOT_EXIST);
+
         DriverInfoVo driverInfoVo = null;
         Long driverId = orderInfo.getDriverId();
         if (driverId != null) {
             driverInfoVo = driverInfoFeignClient.getDriverInfo(driverId).getData();
         }
         OrderBillVo orderBillVo = null;
-        if (orderInfo.getStatus() >= OrderStatus.ORDER_UNPAID.getStatus()) {
+        if (orderInfo.getStatus() >= OrderStatusEnum.ORDER_UNPAID.getStatus()) {
             orderBillVo = orderInfoFeignClient.getOrderBillInfo(orderId).getData();
         }
         OrderInfoVo orderInfoVo = new OrderInfoVo();
@@ -169,8 +200,10 @@ public class OrderServiceImpl implements OrderService {
         orderInfoVo.setOrderBillVo(orderBillVo);
         return orderInfoVo;
     }
+
     /**
      * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     *
      * @param orderId 订单id
      * @return 订单状态代号
      */
@@ -212,7 +245,7 @@ public class OrderServiceImpl implements OrderService {
      * <p>
      * 乘客提交打车订单后，开始计算预估费用，将数据保存到数据库，然后开启任务调度
      * </p>
-
+     *
      * @param submitOrderForm 订单信息对象
      * @return 订单id
      */

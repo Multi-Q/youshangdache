@@ -74,10 +74,10 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     }
 
     /**
-     * 乘客端进入司乘同显页面，需要加载司机的基本信息，显示司机的姓名、头像及驾龄等信息
+     * 获取司机基本信息
      *
      * @param driverId 司机id
-     * @return DriverInfoVo
+     * @return 司机基本信息
      */
     @Override
     public DriverInfoVo getDriverInfoOrder(Long driverId) {
@@ -93,11 +93,9 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         LocalDate now = LocalDate.now();
         int year = Math.abs(
                 Period.between(
-                                licenseIssueDate.toInstant()
-                                        .atZone(ZoneId.systemDefault())
-                                        .toLocalDate(),
-                                now)
-                        .getYears());
+                        licenseIssueDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        now
+                ).getYears());
         driverInfoVo.setDriverLicenseAge(year);
         return driverInfoVo;
     }
@@ -106,10 +104,11 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
      * 更新司机的接单状态
      *
      * <p>
-     *     司机完成当日人脸认证后，就默认司机开启接单了
+     * 司机完成当日人脸认证后，就默认司机开启接单了
      * </p>
+     *
      * @param driverId 司机id
-     * @param status 司机当前的接单状态，由未接单改为开始接单
+     * @param status   司机当前的接单状态，由未接单改为开始接单
      * @return true更新司机接单状态成功 | 更新司机接单状态失败
      */
     @Override
@@ -124,18 +123,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     @Override
     public Boolean verifyDriverFace(DriverFaceModelForm driverFaceModelForm) {
         try {
-            Credential cred = new Credential(tencentCloudProperties.getSecretId(), tencentCloudProperties.getSecretKey());
-            HttpProfile httpProfile = new HttpProfile();
-            httpProfile.setEndpoint("iai.tencentcloudapi.com");
-            ClientProfile clientProfile = new ClientProfile();
-            clientProfile.setHttpProfile(httpProfile);
-            IaiClient client = new IaiClient(cred,
-                    tencentCloudProperties.getRegion(),
-                    clientProfile);
-            VerifyFaceRequest request = new VerifyFaceRequest();
-            request.setImage(driverFaceModelForm.getImageBase64());
-            request.setPersonId(driverFaceModelForm.getDriverId().toString());
-            VerifyFaceResponse resp = client.VerifyFace(request);
+            VerifyFaceResponse resp = getVerifyFaceResponse(driverFaceModelForm);
             if (resp.getIsMatch()) {
                 //照片比对成功,静态活体检测
                 Boolean isSuccess = this.detectLiveFace(driverFaceModelForm.getImageBase64());
@@ -153,6 +141,23 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         }
         throw new GuiguException(ResultCodeEnum.DATA_ERROR);
     }
+
+    private VerifyFaceResponse getVerifyFaceResponse(DriverFaceModelForm driverFaceModelForm) throws TencentCloudSDKException {
+        Credential cred = new Credential(tencentCloudProperties.getSecretId(), tencentCloudProperties.getSecretKey());
+        HttpProfile httpProfile = new HttpProfile();
+        httpProfile.setEndpoint("iai.tencentcloudapi.com");
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setHttpProfile(httpProfile);
+        IaiClient client = new IaiClient(cred,
+                tencentCloudProperties.getRegion(),
+                clientProfile);
+        VerifyFaceRequest request = new VerifyFaceRequest();
+        request.setImage(driverFaceModelForm.getImageBase64());
+        request.setPersonId(driverFaceModelForm.getDriverId().toString());
+        VerifyFaceResponse resp = client.VerifyFace(request);
+        return resp;
+    }
+
     /**
      * 判断司机当日是否进行过人脸识别
      *
@@ -170,6 +175,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     /**
      * 获取司机设置信息
+     *
      * @param driverId 司机id
      * @return 司机的设置信息
      */
@@ -220,6 +226,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     /**
      * 更新司机认证信息
+     *
      * @param updateDriverAuthInfoForm
      * @return
      */
@@ -234,6 +241,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     /**
      * 获取司机认证信息
+     *
      * @param driverId 司机id
      * @return
      */
@@ -256,6 +264,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     /**
      * 司机端-获取登录后的司机信息
+     *
      * @param driverId 司机id
      * @return 司机登录后的司机基本信息
      */
@@ -276,6 +285,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     /**
      * 司机端-小程序授权登录
+     *
      * @param code 微信临时票据
      * @return 用户id
      */

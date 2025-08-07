@@ -60,7 +60,12 @@ public interface DriverInfoService extends IService<DriverInfo> {
      * @return true更新司机接单状态成功 | 更新司机接单状态失败
      */
     Boolean updateServiceStatus(Long driverId, Integer status);
-
+    /**
+     * 获取司机基本信息
+     *
+     * @param driverId 司机id
+     * @return 司机基本信息
+     */
     DriverInfoVo getDriverInfoOrder(Long driverId);
 
     String getDriverOpenId(Long driverId);
