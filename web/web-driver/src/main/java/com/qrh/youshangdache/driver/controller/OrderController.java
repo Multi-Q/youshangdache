@@ -11,6 +11,7 @@ import com.qrh.youshangdache.model.form.order.StartDriveForm;
 import com.qrh.youshangdache.model.form.order.UpdateOrderCartForm;
 import com.qrh.youshangdache.model.vo.base.PageVo;
 import com.qrh.youshangdache.model.vo.map.DrivingLineVo;
+import com.qrh.youshangdache.model.vo.map.OrderServiceLastLocationVo;
 import com.qrh.youshangdache.model.vo.order.CurrentOrderInfoVo;
 import com.qrh.youshangdache.model.vo.order.NewOrderDataVo;
 import com.qrh.youshangdache.model.vo.order.OrderInfoVo;
@@ -35,7 +36,11 @@ public class OrderController {
     private OrderService orderService;
 
     /**
+     * 查询订单状态
+     *
+     * <p>
      * 乘客下完单后，订单状态为1（等待接单），乘客端小程序会轮询订单状态，当订单状态为2（司机已接单）时，说明已经有司机接单了，那么页面进行跳转，进行下一步操作
+     * </p>
      *
      * @param orderId 订单id
      * @return 订单状态代号
@@ -109,10 +114,11 @@ public class OrderController {
     public Result<DrivingLineVo> calculateDrivingLine(@RequestBody CalculateDrivingLineForm calculateDrivingLineForm) {
         return Result.ok(orderService.calculateDrivingLine(calculateDrivingLineForm));
     }
+
     /**
      * 司机到达起始点
      *
-     * @param orderId  订单id
+     * @param orderId 订单id
      * @return true
      */
     @Operation(summary = "司机到达起始点")
@@ -122,6 +128,7 @@ public class OrderController {
         Long driverId = AuthContextHolder.getUserId();
         return Result.ok(orderService.driverArriveStartLocation(orderId, driverId));
     }
+
     /**
      * 更新代驾车辆信息
      *
@@ -140,6 +147,12 @@ public class OrderController {
         return Result.ok(orderService.updateOrderCart(updateOrderCartForm));
     }
 
+    /**
+     * 开始代驾服务
+     *
+     * @param startDriveForm
+     * @return true
+     */
     @Operation(summary = "开始代驾服务")
     @Login
     @PostMapping("/startDrive")
@@ -148,6 +161,25 @@ public class OrderController {
         return Result.ok(orderService.startDrive(startDriveForm));
     }
 
+    /**
+     * 代驾服务：获取订单服务最后一个位置信息
+     *
+     * @param orderId 订单id
+     * @return 最后一个坐标位置
+     */
+    @Operation(summary = "代驾服务：获取订单服务最后一个位置信息")
+    @Login
+    @GetMapping("/getOrderServiceLastLocation/{orderId}")
+    public Result<OrderServiceLastLocationVo> getOrderServiceLastLocation(@PathVariable Long orderId) {
+        return Result.ok(orderService.getOrderServiceLastLocation(orderId));
+    }
+
+    /**
+     * 结束代驾服务更新订单账单
+     *
+     * @param orderFeeForm 订单费用
+     * @return true
+     */
     @Operation(summary = "结束代驾服务更新订单账单")
     @Login
     @PostMapping("/endDrive")
@@ -156,6 +188,13 @@ public class OrderController {
         return Result.ok(orderService.endDrive(orderFeeForm));
     }
 
+    /**
+     * 获取司机订单分页列表
+     *
+     * @param limit 页限制
+     * @param page  页码
+     * @return 订单分页
+     */
     @Operation(summary = "获取司机订单分页列表")
     @Login
     @GetMapping("/findDriverOrderPage/{page}/{limit}")
@@ -168,6 +207,16 @@ public class OrderController {
         return Result.ok(pageVo);
     }
 
+    /**
+     * 发送账单信息
+     *
+     * <p>
+     * 司机端确认账单信息后，点击“发送账单”，乘客端才能切换到未支付账单页面，发送账单其实就是更新订单流程中的一个状态。
+     * </p>
+     *
+     * @param orderId  订单id
+     * @return true
+     */
     @Operation(summary = "发送账单信息")
     @Login
     @GetMapping("/sendOrderBillInfo/{orderId}")

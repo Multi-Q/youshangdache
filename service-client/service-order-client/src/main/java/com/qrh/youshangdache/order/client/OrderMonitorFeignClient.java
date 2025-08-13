@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@FeignClient(value = "service-order")
+@FeignClient(value = "service-order",path = "/order/monitor")
 public interface OrderMonitorFeignClient {
 
     /**
      * 根据订单id获取订单监控信息
      */
-    @GetMapping("/order/monitor/getOrderMonitor/{orderId}")
+    @GetMapping("/getOrderMonitor/{orderId}")
     Result<OrderMonitor> getOrderMonitor(@PathVariable Long orderId);
 
     /**
@@ -25,15 +25,15 @@ public interface OrderMonitorFeignClient {
      * @param OrderMonitor
      * @return
      */
-    @PostMapping("/order/monitor/updateOrderMonitor")
+    @PostMapping("/updateOrderMonitor")
     Result<Boolean> updateOrderMonitor(@RequestBody OrderMonitor OrderMonitor);
 
     /**
      * 保存订单监控记录数据
      *
      * @param orderMonitorRecord
-     * @return
+     * @return true
      */
-    @PostMapping("/order/monitor/saveOrderMonitorRecord")
+    @PostMapping("/saveOrderMonitorRecord")
     Result<Boolean> saveMonitorRecord(@RequestBody OrderMonitorRecord orderMonitorRecord);
 }

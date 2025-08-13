@@ -106,44 +106,99 @@ public interface OrderInfoFeignClient {
      */
     @PostMapping("/updateOrderCart")
     public Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm);
-
+    /**
+     * 开始代驾服务
+     *
+     * @param startDriveForm
+     * @return true
+     */
     @PostMapping("/startDrive")
     public Result<Boolean> startDrive(@RequestBody StartDriveForm startDriveForm);
-
+    /**
+     * 根据时间段获取订单数
+     *
+     * @param startTime 起始时间
+     * @param endTime   终止时间
+     * @return 订单数量
+     */
     @GetMapping("/getOrderNumByTime/{startTime}/{endTime}")
     public Result<Long> getOrderNumByTime(@PathVariable String startTime, @PathVariable String endTime);
-
+    /**
+     * 结束代驾服务，更新订单账单
+     *
+     * @param updateOrderBillForm 账单
+     * @return true
+     */
     @PostMapping("/endDrive")
     public Result<Boolean> endDrive(@RequestBody UpdateOrderBillForm updateOrderBillForm);
-
+    /**
+     * 获取乘客订单分页列表
+     *
+     * @param customerId 用户id
+     * @param limit 页限制
+     * @param page 页码
+     * @return 订单分页
+     */
     @GetMapping("/findCustomerOrderPage/{customerId}/{page}/{limit}")
     public Result<PageVo> findCustomerOrderPage(@PathVariable Long customerId,
                                                 @PathVariable Long limit,
                                                 @PathVariable Long page);
-
+    /**
+     * 获取司机订单分页列表
+     *
+     * @param driverId 司机id
+     * @param limit 页限制
+     * @param page 页码
+     * @return 订单分页
+     */
     @GetMapping("/findDriverOrderPage/{driverId}/{page}/{limit}")
     public Result<PageVo> findDriverOrderPage(@PathVariable Long driverId,
                                               @PathVariable Long limit,
                                               @PathVariable Long page);
 
     /**
-     * 获取<strong>执行中</strong>的订单
+     * 根据订单id获取实际账单信息
      *
      * @param orderId 订单id
-     * @return 执行中的订单的数据
+     * @return 该订单的账单信息
      */
     @GetMapping("/getOrderBillInfo/{orderId}")
     public Result<OrderBillVo> getOrderBillInfo(@PathVariable Long orderId);
-
+    /**
+     * 根据订单id获取实际分账信息
+     *
+     * @param orderId 订单id
+     * @return 订单分账数据
+     */
     @GetMapping("/getOrderProfitsharing/{orderId}")
     public Result<OrderProfitsharingVo> getOrderProfitsharing(@PathVariable Long orderId);
-
+    /**
+     * 发送账单信息
+     *
+     * <p>
+     * 司机端确认账单信息后，点击“发送账单”，乘客端才能切换到未支付账单页面，发送账单其实就是更新订单流程中的一个状态。
+     * </p>
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     @GetMapping("/sendOrderBillInfo/{orderId}/{driverId}")
     public Result<Boolean> sendOrderBillInfo(@PathVariable Long orderId, @PathVariable Long driverId);
-
+    /**
+     * 获取订单支付信息
+     * @param orderNo 订单编号
+     * @param customerId 用户id
+     * @return 订单支付信息
+     */
     @GetMapping("/getOrderPayVo/{orderNo}/{customerId}")
     public Result<OrderPayVo> getOrderPayVo(@PathVariable String orderNo, @PathVariable Long customerId);
-
+    /**
+     * 更改订单支付状态
+     *
+     * @param orderNo 订单编号
+     * @return true
+     */
     @GetMapping("/updateOrderPayStatus/{orderNo} ")
     public Result<Boolean> updateOrderPayStatus(@PathVariable String orderNo);
 

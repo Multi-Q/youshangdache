@@ -145,12 +145,24 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderRewardVo;
     }
 
+    /**
+     * 更改订单支付状态
+     *
+     * @param orderNo 订单编号
+     * @return true
+     */
     @Override
     public Boolean updateOrderPayStatus(String orderNo) {
         OrderInfo orderInfo = orderInfoMapper.selectOne(new LambdaQueryWrapper<OrderInfo>().eq(OrderInfo::getOrderNo, orderNo));
-        if (orderInfo != null || orderInfo.getStatus().equals(OrderStatusEnum.ORDER_PAID.getStatus())) {
+
+        //订单存在且已付款
+        if (orderInfo == null) {
+            throw new GuiguException(ResultCodeEnum.ORDER_NOT_EXIST);
+        }
+        if (orderInfo.getStatus().equals(OrderStatusEnum.ORDER_PAID.getStatus())) {
             return true;
         }
+        //订单存在，但订单未支付
         OrderInfo orderInfo1 = new OrderInfo();
         orderInfo1.setStatus(OrderStatusEnum.ORDER_PAID.getStatus());
         orderInfo1.setPayTime(new Date());
@@ -162,6 +174,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
     }
 
+    /**
+     * 获取订单支付信息
+     *
+     * @param orderNo    订单编号
+     * @param customerId 用户id
+     * @return 订单支付信息
+     */
     @Override
     public OrderPayVo getOrderPayVo(String orderNo, Long customerId) {
         OrderPayVo orderPayVo = orderInfoMapper.selectOrderPayVo(orderNo, customerId);
@@ -172,6 +191,17 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderPayVo;
     }
 
+    /**
+     * 发送账单信息
+     *
+     * <p>
+     * 司机端确认账单信息后，点击“发送账单”，乘客端才能切换到未支付账单页面，发送账单其实就是更新订单流程中的一个状态。
+     * </p>
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     @Override
     public Boolean sendOrderBillInfo(Long orderId, Long driverId) {
         LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<OrderInfo>()
@@ -188,6 +218,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     }
 
+    /**
+     * 根据订单id获取实际分账信息
+     *
+     * @param orderId 订单id
+     * @return 订单分账数据
+     */
     @Override
     public OrderProfitsharingVo getOrderProfitsharing(Long orderId) {
         LambdaQueryWrapper<OrderProfitsharing> wrapper = new LambdaQueryWrapper<OrderProfitsharing>().eq(OrderProfitsharing::getOrderId, orderId);
@@ -197,6 +233,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderProfitsharingVo;
     }
 
+    /**
+     * 根据订单id获取实际账单信息
+     *
+     * @param orderId 订单id
+     * @return 该订单的账单信息
+     */
     @Override
     public OrderBillVo getOrderBillInfo(Long orderId) {
         LambdaQueryWrapper<OrderBill> wrapper = new LambdaQueryWrapper<OrderBill>().eq(OrderBill::getOrderId, orderId);
@@ -224,8 +266,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * 获取乘客订单分页列表
      *
      * @param pageParam  分页参数
-     * @param customerId 客户id
-     * @return 分页数据
+     * @param customerId 用户id
+     * @return 订单数据
      */
     @Override
     public PageVo findCustomerOrderPage(Page<OrderInfo> pageParam, Long customerId) {
@@ -235,10 +277,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     /**
-     * 司机到达终点
+     * 结束代驾服务更新订单账单
      *
-     * @param updateOrderBillForm
-     * @return
+     * @param updateOrderBillForm 账单
+     * @return true
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
@@ -288,20 +330,26 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
     }
 
+    /**
+     * 根据时间段获取订单数
+     *
+     * @param startTime 起始时间
+     * @param endTime   终止时间
+     * @return 订单数量
+     */
     @Override
     public Long getOrderNumByTime(String startTime, String endTime) {
         LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<OrderInfo>()
                 .ge(OrderInfo::getStartServiceTime, startTime)
                 .le(OrderInfo::getEndServiceTime, endTime);
-        Long count = orderInfoMapper.selectCount(wrapper);
-        return count;
+        return orderInfoMapper.selectCount(wrapper);
     }
 
     /**
-     * 代驾开始
+     * 开始代驾服务
      *
      * @param startDriveForm
-     * @return
+     * @return true
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -315,7 +363,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         updateOrderInfo.setStartServiceTime(new Date());
         //只能更新自己的订单
         int row = orderInfoMapper.update(updateOrderInfo, queryWrapper);
-        if (row == 1) {
+        if (row >= 1) {
             //记录日志
             this.log(startDriveForm.getOrderId(), OrderStatusEnum.START_SERVICE.getStatus());
         } else {

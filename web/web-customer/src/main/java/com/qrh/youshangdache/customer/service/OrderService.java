@@ -71,7 +71,13 @@ public interface OrderService {
     DrivingLineVo calculateDriverLine(CalculateDrivingLineForm calculateDrivingLineForm);
 
     OrderServiceLastLocationVo getOrderServiceLastLocation(Long orderId);
-
+    /**
+     * 获取乘客订单分页列表
+     *
+     * @param pageParam 分页参数对象
+     * @param customerId 用户id
+     * @return 订单分页
+     */
     PageVo findCustomerOrderPage(Page<OrderInfo> pageParam, Long customerId);
 
     WxPrepayVo createWxPayment(CreateWxPaymentForm createWxPaymentForm);

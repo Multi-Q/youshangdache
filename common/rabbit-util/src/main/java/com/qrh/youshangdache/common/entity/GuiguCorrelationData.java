@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 
-@Getter
+@Data
 @ToString
 public class GuiguCorrelationData extends CorrelationData {
 

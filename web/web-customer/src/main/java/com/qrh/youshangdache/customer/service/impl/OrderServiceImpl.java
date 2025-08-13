@@ -117,7 +117,13 @@ public class OrderServiceImpl implements OrderService {
         WxPrepayVo wxPrepayVo = wxPayFeignClient.createWxPayment(paymentInfoForm).getData();
         return wxPrepayVo;
     }
-
+    /**
+     * 获取乘客订单分页列表
+     *
+     * @param pageParam 分页参数对象
+     * @param customerId 用户id
+     * @return 订单分页
+     */
     @Override
     public PageVo findCustomerOrderPage(Page<OrderInfo> pageParam, Long customerId) {
         return orderInfoFeignClient.findCustomerOrderPage(customerId, pageParam.getPages(), pageParam.getSize()).getData();

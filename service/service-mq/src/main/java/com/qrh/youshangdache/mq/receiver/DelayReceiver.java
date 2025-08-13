@@ -33,7 +33,12 @@ public class DelayReceiver {
      * @param message
      * @param channel
      */
-    @RabbitListener(queues = DelayedMqConfig.QUEUE_DELAY_1)
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "queue.delay.1", durable = "true", autoDelete = "false"),
+            exchange = @Exchange(value = "exchange.delay", type = ExchangeTypes.TOPIC, delayed = "true"),
+            key = "routing.delay"
+    )
+    )
     public void getDelayMsg(String msg, Message message, Channel channel) {
         String key = "mq:" + msg;
         try {

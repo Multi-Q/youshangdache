@@ -97,18 +97,48 @@ public class LocationController {
         return Result.ok(locationService.getCacheOrderLocation(orderId));
     }
 
+    /**
+     * 批量保存代驾服务订单位置
+     *
+     * <p>
+     * 司机开始代驾后，为了减少请求次数，司机端会实时收集变更的GPS定位信息，定时批量上传到后台服务器
+     * </p>
+     *
+     * @param orderServiceLocationForms
+     * @return true
+     */
     @Operation(summary = "批量保存代驾服务订单位置")
     @PostMapping("/saveOrderServiceLocation")
     public Result<Boolean> saveOrderServiceLocation(@RequestBody List<OrderServiceLocationForm> orderServiceLocationForms) {
         return Result.ok(locationService.saveOrderServiceLocation(orderServiceLocationForms));
     }
 
+    /**
+     * 代驾服务：获取订单服务最后一个位置信息
+     *
+     * <p>
+     * 司机开始代驾后，乘客端获取司机的动向，定时获取上面更新的最后一个位置信息。
+     * </p>
+     *
+     * @param orderId 订单id
+     * @return 最后一个坐标位置
+     */
     @Operation(summary = "代驾服务：获取订单服务最后一个位置信息")
     @GetMapping("/getOrderServiceLastLocation/{orderId}")
     public Result<OrderServiceLastLocationVo> getOrderServiceLastLocation(@PathVariable Long orderId) {
         return Result.ok(locationService.getOrderServiceLastLocation(orderId));
     }
 
+    /**
+     * 代驾服务：计算订单实际里程
+     *
+     * <p>
+     * 把MongoDB中该订单的GPS定位坐标都给取出来，以时间排序，连接成连线，这个线的距离就是时间里程
+     * </p>
+     *
+     * @param orderId 订单id
+     * @return 订单实际的公里数
+     */
     @Operation(summary = "代驾服务：计算订单实际里程")
     @GetMapping("/calculateOrderRealDistance/{orderId}")
     public Result<BigDecimal> calculateOrderRealDistance(@PathVariable Long orderId) {

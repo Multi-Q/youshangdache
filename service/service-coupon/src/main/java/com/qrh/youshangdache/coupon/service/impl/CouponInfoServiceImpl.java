@@ -8,6 +8,8 @@ import com.qrh.youshangdache.coupon.mapper.CustomerCouponMapper;
 import com.qrh.youshangdache.coupon.service.CouponInfoService;
 import com.qrh.youshangdache.model.entity.coupon.CouponInfo;
 import com.qrh.youshangdache.model.entity.coupon.CustomerCoupon;
+import com.qrh.youshangdache.model.enums.CouponTypeEnum;
+import com.qrh.youshangdache.model.enums.CouponUsageThresholdEnum;
 import com.qrh.youshangdache.model.form.coupon.UseCouponForm;
 import com.qrh.youshangdache.model.vo.base.PageVo;
 import com.qrh.youshangdache.model.vo.coupon.AvailableCouponVo;
@@ -42,7 +44,6 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
     private CustomerCouponMapper customerCouponMapper;
     @Resource
     private RedissonClient redissonClient;
-
 
 
     @Override
@@ -102,6 +103,13 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         return null;
     }
 
+    /**
+     * 获取未使用的最佳优惠券信息
+     *
+     * @param customerId  用户id
+     * @param orderAmount 订单金额
+     * @return 可用的优惠券列表
+     */
     @Override
     public List<AvailableCouponVo> findAvailableCoupon(Long customerId, BigDecimal orderAmount) {
         //1 创建一个list集合，存储返回的数据
@@ -109,21 +117,29 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         //2 根据乘客id，获取乘客已经领取但是没有使用的优惠券列表
         List<NoUseCouponVo> list = couponInfoMapper.findNoUseList(customerId);
         //3 遍历乘客未使用优惠券列表，得到每个优惠券
-        List<NoUseCouponVo> typeList = list.stream().filter(item -> item.getCouponType() == 1).collect(Collectors.toList());
         //3 是现金券
+        List<NoUseCouponVo> typeList = list.stream()
+                .filter(item -> item.getCouponType()
+                        .equals(CouponTypeEnum.CASH.getCode()))
+                .toList();
         for (NoUseCouponVo noUseCouponVo : typeList) {
             BigDecimal reduceAmount = noUseCouponVo.getAmount();
             //没有门槛
-            if (noUseCouponVo.getConditionAmount().doubleValue() == 0 && orderAmount.subtract(reduceAmount).doubleValue() > 0) {
+            if (noUseCouponVo.getConditionAmount().intValue() == CouponUsageThresholdEnum.NO_THRESHOLD.getCode() &&
+                    orderAmount.subtract(reduceAmount).doubleValue() > 0) {
                 availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
             }
             //有门槛
-            if (noUseCouponVo.getConditionAmount().doubleValue() > 0 && orderAmount.subtract(noUseCouponVo.getConditionAmount()).doubleValue() > 0) {
+            if (noUseCouponVo.getConditionAmount().intValue() > CouponUsageThresholdEnum.NO_THRESHOLD.getCode() &&
+                    orderAmount.subtract(noUseCouponVo.getConditionAmount()).doubleValue() > 0) {
                 availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
             }
         }
         //4 折扣券
-        List<NoUseCouponVo> typeList2 = list.stream().filter(item -> item.getCouponType() == 2).collect(Collectors.toList());
+        List<NoUseCouponVo> typeList2 = list.stream()
+                .filter(item -> item.getCouponType()
+                        .equals(CouponTypeEnum.DISCOUNT.getCode()))
+                .toList();
         for (NoUseCouponVo noUseCouponVo : typeList2) {
             //折扣之后的金额
             BigDecimal discountAmount = orderAmount.multiply(noUseCouponVo.getDiscount())
@@ -131,16 +147,17 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
                     .setScale(2, RoundingMode.HALF_UP);
             BigDecimal reduceAmount = orderAmount.subtract(discountAmount);
             //没有门槛
-            if (noUseCouponVo.getConditionAmount().doubleValue() == 0) {
+            if (noUseCouponVo.getConditionAmount().intValue() == CouponUsageThresholdEnum.NO_THRESHOLD.getCode()) {
                 availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
             }
             //有门槛
-            if (noUseCouponVo.getConditionAmount().doubleValue() > 0 && orderAmount.subtract(noUseCouponVo.getConditionAmount()).doubleValue() > 0) {
+            if (noUseCouponVo.getConditionAmount().intValue() > CouponUsageThresholdEnum.NO_THRESHOLD.getCode() &&
+                    orderAmount.subtract(noUseCouponVo.getConditionAmount()).doubleValue() > 0) {
                 availableCouponVoList.add(this.buildBestNoUseCouponVo(noUseCouponVo, reduceAmount));
             }
         }
         //5 把满足条件的优惠券放到list中
-        if (!CollectionUtils.isEmpty(availableCouponVoList)) {
+        if (!availableCouponVoList.isEmpty()) {
             availableCouponVoList.sort(Comparator.comparing(AvailableCouponVo::getReduceAmount));
         }
         return availableCouponVoList;
@@ -154,13 +171,20 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         return availableCouponVo;
     }
 
+    /**
+     * 领取优惠券
+     *
+     * @param customerId 用户id
+     * @param couponId   优惠券id
+     * @return true
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean receive(Long customerId, Long couponId) {
         //1、查询优惠券
         CouponInfo couponInfo = this.getById(couponId);
-        if(null == couponInfo) {
-            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        if (null == couponInfo) {
+            throw new GuiguException(ResultCodeEnum.COUPON_EXPIRED_OR_NOT_EXIST);
         }
 
         //2、优惠券过期日期判断
@@ -169,7 +193,7 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         }
 
         //3、校验库存，优惠券领取数量判断
-        if (couponInfo.getPublishCount() !=0 && couponInfo.getReceiveCount() >= couponInfo.getPublishCount()) {
+        if (couponInfo.getPublishCount() != 0 && couponInfo.getReceiveCount() >= couponInfo.getPublishCount()) {
             throw new GuiguException(ResultCodeEnum.COUPON_LESS);
         }
 
@@ -192,13 +216,13 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
 
                 //5、更新优惠券领取数量
                 int row;
-                if (couponInfo.getPublishCount() == 0) {//没有限制
+                if (couponInfo.getPublishCount() == 0) {//发行数量没有限制
                     row = couponInfoMapper.updateReceiveCount(couponId);
                 } else {
                     //乐观锁
                     row = couponInfoMapper.updateReceiveCountByLimit(couponId);
                 }
-                if (row == 1) {
+                if (row >= 1) {
                     //6、保存领取记录
                     this.saveCustomerCoupon(customerId, couponId, couponInfo.getExpireTime());
                     return true;
@@ -232,12 +256,26 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
         return new PageVo(pageInfo.getRecords(), pageInfo.getPages(), pageInfo.getTotal());
     }
 
+    /**
+     * 查询未使用优惠券分页列表
+     *
+     * @param customerId 用户id
+     * @param pageParam  分页参数
+     * @return 优惠券分页数据
+     */
     @Override
     public PageVo<NoUseCouponVo> findNoUsePage(Page<CouponInfo> pageParam, Long customerId) {
         IPage<NoUseCouponVo> pageInfo = couponInfoMapper.findNoUsePage(pageParam, customerId);
         return new PageVo(pageInfo.getRecords(), pageInfo.getPages(), pageInfo.getTotal());
     }
 
+    /**
+     * 查询未领取优惠券分页列表
+     *
+     * @param customerId 用户id
+     * @param pageParam  分页参数
+     * @return 优惠券分页列表
+     */
     @Override
     public PageVo<NoReceiveCouponVo> findNoReceivePage(Page<CouponInfo> pageParam, Long customerId) {
         IPage<NoReceiveCouponVo> noReceivePage = couponInfoMapper.findNoReceivePage(pageParam, customerId);

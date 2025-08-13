@@ -79,25 +79,83 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @return true
      */
     Boolean updateOrderCart(UpdateOrderCartForm updateOrderCartForm);
-
+    /**
+     * 开始代驾服务
+     *
+     * @param startDriveForm
+     * @return true
+     */
     Boolean startDrive(StartDriveForm startDriveForm);
-
+    /**
+     * 根据时间段获取订单数
+     *
+     * @param startTime 起始时间
+     * @param endTime   终止时间
+     * @return 订单数量
+     */
     Long getOrderNumByTime(String startTime, String endTime);
-
+    /**
+     * 结束代驾服务更新订单账单
+     *
+     * @param updateOrderBillForm 账单
+     * @return true
+     */
     Boolean endDrive(UpdateOrderBillForm updateOrderBillForm);
-
+    /**
+     * 获取司机订单分页列表
+     *
+     * @param pageParam 分页参数
+     * @param  customerId 用户id
+     * @return 订单分页
+     */
     PageVo findCustomerOrderPage(Page<OrderInfo> pageParam, Long customerId);
-
+    /**
+     * 获取司机订单分页列表
+     *
+     * @param pageParam 分页参数
+     * @param driverId 司机id
+     * @return 订单分页
+     */
     PageVo findDriverOrderPage(Page<OrderInfo> pageParam, Long driverId);
-
+    /**
+     * 根据订单id获取实际账单信息
+     *
+     * @param orderId 订单id
+     * @return 该订单的账单信息
+     */
     OrderBillVo getOrderBillInfo(Long orderId);
-
+    /**
+     * 根据订单id获取实际分账信息
+     *
+     * @param orderId 订单id
+     * @return 订单分账数据
+     */
     OrderProfitsharingVo getOrderProfitsharing(Long orderId);
-
+    /**
+     * 发送账单信息
+     *
+     * <p>
+     * 司机端确认账单信息后，点击“发送账单”，乘客端才能切换到未支付账单页面，发送账单其实就是更新订单流程中的一个状态。
+     * </p>
+     *
+     * @param orderId  订单id
+     * @param driverId 司机id
+     * @return true
+     */
     Boolean sendOrderBillInfo(Long orderId, Long driverId);
-
+    /**
+     * 获取订单支付信息
+     * @param orderNo 订单编号
+     * @param customerId 用户id
+     * @return 订单支付信息
+     */
     OrderPayVo getOrderPayVo(String orderNo, Long customerId);
-
+    /**
+     * 更改订单支付状态
+     *
+     * @param orderNo 订单编号
+     * @return true
+     */
     Boolean updateOrderPayStatus(String orderNo);
 
     OrderRewardVo getOrderRewardFee(String orderNo);

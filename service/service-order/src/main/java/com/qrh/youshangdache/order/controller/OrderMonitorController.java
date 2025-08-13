@@ -29,6 +29,12 @@ public class OrderMonitorController {
         return Result.ok(orderMonitorService.updateOrderMonitor(OrderMonitor));
     }
 
+    /**
+     * 保存订单监控记录数据
+     *
+     * @param orderMonitorRecord
+     * @return true
+     */
     @Operation(summary = "保存订单监控记录数据")
     @PostMapping("/saveOrderMonitorRecord")
     public Result<Boolean> saveMonitorRecord(@RequestBody OrderMonitorRecord orderMonitorRecord) {

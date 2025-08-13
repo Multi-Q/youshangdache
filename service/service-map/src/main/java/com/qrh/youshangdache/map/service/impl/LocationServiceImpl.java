@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.qrh.youshangdache.common.constant.OrderDistanceConstant;
 import com.qrh.youshangdache.common.constant.RedisConstant;
 import com.qrh.youshangdache.common.constant.SystemConstant;
-import com.qrh.youshangdache.common.result.Result;
 import com.qrh.youshangdache.common.util.LocationUtil;
 import com.qrh.youshangdache.driver.client.DriverInfoFeignClient;
 import com.qrh.youshangdache.map.repository.OrderServiceLocationRepository;
@@ -23,18 +22,14 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.connection.RedisGeoCommands;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -60,10 +55,14 @@ public class LocationServiceImpl implements LocationService {
     private OrderInfoFeignClient orderInfoFeignClient;
 
     /**
-     * 计算订单真实距离
+     * 代驾服务：计算订单实际里程
+     *
+     * <p>
+     * 把MongoDB中该订单的GPS定位坐标都给取出来，以时间排序，连接成连线，这个线的距离就是时间里程
+     * </p>
      *
      * @param orderId 订单id
-     * @return
+     * @return 订单实际的公里数
      */
     @Override
     public BigDecimal calculateOrderRealDistance(Long orderId) {
@@ -77,10 +76,12 @@ public class LocationServiceImpl implements LocationService {
             for (int i = 0, size = list.size() - 1; i < size; i++) {
                 OrderServiceLocation location1 = list.get(i);
                 OrderServiceLocation location2 = list.get(i + 1);
-                double distance = LocationUtil.getDistance(location1.getLatitude().doubleValue(),
+                double distance = LocationUtil.getDistance(
+                        location1.getLatitude().doubleValue(),
                         location1.getLongitude().doubleValue(),
                         location2.getLatitude().doubleValue(),
-                        location2.getLongitude().doubleValue());
+                        location2.getLongitude().doubleValue()
+                );
                 realDistance += distance;
             }
         }
@@ -95,10 +96,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * 司机开始代驾后，乘客端要获取司机的动向，就必须定时获取上面更新的最后一个位置信息。
+     * 代驾服务：获取订单服务最后一个位置信息
+     *
+     * <p>
+     * 司机开始代驾后，乘客端获取司机的动向，定时获取上面更新的最后一个位置信息。
+     * </p>
      *
      * @param orderId 订单id
-     * @return 最后一个位置信息
+     * @return 最后一个坐标位置
      */
     @Override
     public OrderServiceLastLocationVo getOrderServiceLastLocation(Long orderId) {
@@ -114,20 +119,24 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * 司机开始代驾后，为了减少请求次数，司机端会实时收集变更的GPS定位信息，定时批量上传到后台服务器。
+     * 批量保存代驾服务订单位置
+     *
+     * <p>
+     * 司机开始代驾后，为了减少请求次数，司机端会实时收集变更的GPS定位信息，定时批量上传到后台服务器
+     * </p>
      *
      * @param orderServiceLocationForms
-     * @return
+     * @return true
      */
     @Override
     public Boolean saveOrderServiceLocation(List<OrderServiceLocationForm> orderServiceLocationForms) {
         List<OrderServiceLocation> list = new ArrayList<>();
         orderServiceLocationForms.forEach(orderServiceLocationForm -> {
-            OrderServiceLocation orderServiceLocation = new OrderServiceLocation();
-            BeanUtils.copyProperties(orderServiceLocationForm, orderServiceLocation);
-            orderServiceLocation.setId(ObjectId.get().toString());
-            orderServiceLocation.setCreateTime(new Date());
-            list.add(orderServiceLocation);
+            OrderServiceLocation location = new OrderServiceLocation();
+            BeanUtils.copyProperties(orderServiceLocationForm, location);
+            location.setId(ObjectId.get().toString());
+            location.setCreateTime(new Date());
+            list.add(location);
         });
         orderServiceLocationRepository.saveAll(list);
 

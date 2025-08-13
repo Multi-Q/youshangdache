@@ -10,6 +10,7 @@ import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author QRH
@@ -27,7 +28,7 @@ public class DroolsUtils {
         KieServices kieServices = KieServices.Factory.get();
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem()
                 .write(ResourceFactory.newClassPathResource(ruleFilePath));
-        KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem)                .buildAll();
+        KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem).buildAll();
         if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
             throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
         }

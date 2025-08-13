@@ -16,10 +16,17 @@ import org.springframework.stereotype.Service;
 public class RewardRuleServiceImpl implements RewardRuleService {
     private static final String RULES_CUSTOMER_RULES_DRL = "rules/RewardRule.drl";
 
+    /**
+     * 计算订单奖励费用
+     *
+     * @param rewardRuleRequestForm
+     * @return
+     */
     @Override
     public RewardRuleResponseVo calculateOrderRewardFee(RewardRuleRequestForm rewardRuleRequestForm) {
         RewardRuleRequest rewardRuleRequest = new RewardRuleRequest();
         rewardRuleRequest.setOrderNum(rewardRuleRequestForm.getOrderNum());
+
         //创建规则引擎对象
         KieSession kieSession = DroolsUtils.loadForRule(RULES_CUSTOMER_RULES_DRL);
         RewardRuleResponse response = new RewardRuleResponse();
@@ -28,6 +35,7 @@ public class RewardRuleServiceImpl implements RewardRuleService {
         kieSession.insert(rewardRuleRequest);
         kieSession.fireAllRules();
         kieSession.dispose();
+
         RewardRuleResponseVo rewardRuleResponseVo = new RewardRuleResponseVo();
         rewardRuleResponseVo.setRewardAmount(response.getRewardAmount());
         return rewardRuleResponseVo;

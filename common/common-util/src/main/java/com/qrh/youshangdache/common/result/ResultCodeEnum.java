@@ -50,7 +50,8 @@ public enum ResultCodeEnum {
     LOGIN_MOBILE_ERROR(235,"手机号登陆失败" ),
     ACCOUNT_NOT_EXIST(236, "账号不存在"),
     UNCORRECTED_PHONE_NUMBER(237, "手机号不正确"),
-    ORDER_NOT_EXIST(238, "订单不存在");
+    ORDER_NOT_EXIST(238, "订单不存在"),
+    COUPON_EXPIRED_OR_NOT_EXIST(239,"优惠券不存在或已过期");
 
     private final Integer code;
 
